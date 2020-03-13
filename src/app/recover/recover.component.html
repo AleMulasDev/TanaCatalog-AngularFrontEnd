@@ -1,0 +1,18 @@
+<div *ngIf='!sent'>
+  <form (ngSubmit)="onSubmit()" #recoverForm="ngForm">
+    <div class="form-group">
+      <label for="email1">Email</label>
+      <input type="email" class="form-control" id="email1" required name="email"
+      [(ngModel)]="email">
+    </div>
+    <button type="submit" class="btn btn-primary">Recupera</button>
+  </form>
+</div>
+<div *ngIf="sent || error">
+  <div *ngIf='message'>
+    <span>{{message}}</span>
+  </div>
+  <div *ngIf='error'>
+    <span style="color: red;">{{error}}</span>
+  </div>
+</div>

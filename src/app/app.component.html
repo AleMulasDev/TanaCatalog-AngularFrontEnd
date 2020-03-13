@@ -1,0 +1,73 @@
+<div class="topNav" [class.is-mobile]="isMediumMonitor">
+  <!-- toolbar -->
+  <mat-toolbar role="heading" class="toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon aria-hidden="false" aria-label="Menu">view_list</mat-icon>
+    </button>
+    <!-- Logo -->
+    <picture style="height: inherit;">
+      <source srcset="/assets/logo.png" />
+      <img style="height: inherit; max-width: 100%" alt="{{ title }}: community dei Giochi Da Tavolo" />
+    </picture>
+    <span style="flex: 1 1 auto;"></span>
+    <!-- Buttons to be added here -->
+  </mat-toolbar>
+
+  <!-- sidenav -->
+
+  <mat-sidenav-container [hasBackdrop]="true" class="sidenav-container" [style.marginTop.px]="isMediumMonitor ? 60 : 0">
+    <mat-sidenav #sidenav position="start" role="navigation" mode="over" [fixedInViewport]="isMediumMonitor"
+      fixedTopGap="60" [class.sidenav-mobile]="!isMediumMonitor">
+      <div class="container-sm">
+        <mat-nav-list style="border:10px;">
+          <mat-action-list>
+            <!-- Navbar -->
+            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/']"
+              routerLinkActive="router-link-active">
+              <mat-icon aria-hidden="true">view_list</mat-icon>Visualizza giochi
+            </button>
+            <mat-divider></mat-divider>
+            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/admin']"
+              routerLinkActive="router-link-active">
+              <mat-icon aria-hidden="true">settings</mat-icon>Admin
+            </button>
+          </mat-action-list>
+          <mat-card class="loginArea">
+
+            <ng-container *ngIf="!isLogged">
+              <button mat-raised-button (click)="sidenav.close()" [routerLink]="['/login']"
+                routerLinkActive="router-link-active" style="margin-bottom: 10px">
+                Accedi
+              </button>
+              <button mat-raised-button (click)="sidenav.close()" [routerLink]="['/register']"
+                routerLinkActive="router-link-active">
+                Registrati
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="isLogged">
+              <button mat-raised-button (click)="sidenav.close(); logout()" [routerLink]="['/']"
+              routerLinkActive="router-link-active" style="margin-bottom: 10px">
+              Esci
+              </button>
+              <button mat-raised-button (click)="sidenav.close();" [routerLink]="['/changePassword']"
+              routerLinkActive="router-link-active" style="margin-bottom: 10px">
+              Cambia password
+              </button>
+              <button mat-raised-button (click)="sidenav.close();" [routerLink]="['/changeEmail']"
+              routerLinkActive="router-link-active">
+              Cambia email
+              </button>
+            </ng-container>
+
+          </mat-card>
+        </mat-nav-list>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content role="main">
+      <div class="mainTable">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

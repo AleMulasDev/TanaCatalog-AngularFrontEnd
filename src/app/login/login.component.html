@@ -1,0 +1,25 @@
+<form (ngSubmit)="onSubmit()" #loginForm="ngForm" style="margin-bottom:10px;">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" required name="email"
+    [(ngModel)]="email">
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" required name="password"
+    [(ngModel)]="password">
+  </div>
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="keepLogged" name="keepLogged"
+    [(ngModel)]="keepLogged">
+    <label class="form-check-label" for="keepLogged">Keep logged</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<div style="display: flex;align-content:center;color:red;" *ngIf="error">
+  {{error}}
+</div>
+<mat-divider></mat-divider>
+<button mat-raised-button (click)='recover()' style="margin-top:5px;cursor:pointer">
+  Premi qua per recuperare la password
+</button>
