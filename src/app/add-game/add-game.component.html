@@ -1,0 +1,142 @@
+<form  *ngIf="!searched">
+  <div class="form-group">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div style="margin-bottom: 30px;">
+            <h2>Inserimento di un nuovo gioco</h2>
+            Prova a digitare le iniziali del gioco che vuoi aggiungere, se compare nella lista sottostante cliccaci sopra.<br>
+            In alternativa, premi la scritta blu qua sotto per aggiungere manualmente i dettagli del gioco.<br>
+            <br>
+            La ricerca automatica dei giochi è permessa dall'API pubblica di <a href="https://www.boardgamegeek.com/">boardgamegeek</a>
+          </div>
+          
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12">
+          <mat-divider></mat-divider>
+          <label for="title">Nome del gioco:</label>
+          <input type="text" class="form-control" id="title" 
+            required 
+            name="title"
+            [(ngModel)]="title"
+            (keyup)="startTimer()"
+            matInput       
+            [matAutocomplete]="auto"
+            style="margin-top: 10px">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)='onSelect($event)'>
+            <mat-option *ngFor="let option of suggestedGames" [value]="option.name">
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso' *ngIf='searching'></mat-progress-bar>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <a (click)='cantFind()' style="cursor: pointer;color: blue;">Premi qua se non riesci a trovare il gioco</a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  
+</form>
+<div *ngIf="searched || !canFind">
+  <mat-card>
+    <form (ngSubmit)="onSubmit()" #confirmForm="ngForm">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6" >
+            <div *ngIf='canFind; else fileUpload' style="height: inherit;">
+              <img class='img-fluid' [src]='game.image'><img>
+            </div>
+            <ng-template #fileUpload>
+              <div class="custom-file" *ngIf='!canFind' style="height: inherit;">
+                <input type="file" class="custom-file-input" 
+                id="file" (change)="handleFile($event.target.files)">
+                <label class="custom-file-label" for="customFile">{{file? file.name : 'Seleziona immagine'}}</label>
+              </div>
+              <div *ngIf='imagePreview' style="height: inherit;">
+                <img [src]='imagePreview' class='img-fluid' style="margin: 10px;"><img>
+              </div>
+            </ng-template>
+          </div>
+          <div class="col-xl-6">
+
+            <div *ngIf='canFind; else gameName'>
+              <mat-card-title>
+                {{game.title}}
+              </mat-card-title>
+            </div>
+
+            <ng-template #gameName>
+              <mat-card-title *ngIf='!canFind'>
+                <div class="form-group">
+                  <label for="name">Nome gioco:</label>
+                  <input type="text" name="name" id="name" class="form-control"
+                  [(ngModel)]="game.title"
+                  >
+                </div>
+              </mat-card-title>
+            </ng-template>
+
+              <div class="form-group">
+                <label for="description">Descrizione: </label>
+                <textarea [(innerHtml)]="game.description" id='description' style="width: 100%;">
+                </textarea>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6">
+            <div class="form-group">
+              <label for="player">Giocatori consigliati</label>
+              <input type="text" name="player" id="player" class="form-control"
+              [(ngModel)]="game.players"
+              >
+        
+              <label for="age">Età consigliata</label>
+              <input type="text" name="age" id="age" class="form-control"
+              [(ngModel)]="game.age"
+              >
+        
+              <label for="playingTime">Tempo di gioco</label>
+              <input type="text" name="playingTime" id="playingTime" class="form-control"
+              [(ngModel)]="game.playtime"
+              >
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="form-group">
+              <label for="price">Prezzo</label>
+                <input type="text" name="price" id="price" class="form-control"
+                [(ngModel)]="game.price"
+                >
+
+                <label for="linktdg">Link Tana dei Goblin</label>
+                <input type="text" name="linktdg" id="linktdg" class="form-control"
+                [(ngModel)]="game.link_tdg"
+                >
+            </div>
+          </div>
+        
+        </div>
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Conferma dati</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div style="display: flex;align-content:center;color:red;" *ngIf="error">
+              {{error}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</div>

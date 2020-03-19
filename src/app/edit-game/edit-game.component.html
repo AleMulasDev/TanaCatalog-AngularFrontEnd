@@ -1,0 +1,87 @@
+<div *ngIf="game">
+  <mat-card>
+    <form (ngSubmit)="onSubmit()" #confirmForm="ngForm">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2>Modifica gioco:</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6" >
+            <div *ngIf='game.image' style="height: inherit;">
+              <img class='img-fluid' [src]='game.image'><img>
+            </div>
+          </div>
+          <div class="col-xl-6">
+
+            <mat-card-title>
+              <div class="form-group">
+                <label for="name">Nome gioco:</label>
+                <input type="text" name="name" id="name" class="form-control"
+                [(ngModel)]="game.title"
+                >
+              </div>
+            </mat-card-title>
+
+              <div class="form-group">
+                <label for="description">Descrizione: </label>
+                <textarea [(innerHtml)]="game.description" id='description' style="width: 100%;">
+                </textarea>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6">
+            <div class="form-group">
+              <label for="player">Giocatori consigliati</label>
+              <input type="text" name="player" id="player" class="form-control"
+              [(ngModel)]="game.players"
+              >
+        
+              <label for="age">Età consigliata</label>
+              <input type="text" name="age" id="age" class="form-control"
+              [(ngModel)]="game.age"
+              >
+        
+              <label for="playingTime">Tempo di gioco</label>
+              <input type="text" name="playingTime" id="playingTime" class="form-control"
+              [(ngModel)]="game.playtime"
+              >
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="form-group">
+              <label for="price">Prezzo</label>
+                <input type="text" name="price" id="price" class="form-control"
+                [(ngModel)]="game.price"
+                >
+
+                <label for="linktdg">Link Tana dei Goblin</label>
+                <input type="text" name="linktdg" id="linktdg" class="form-control"
+                [(ngModel)]="game.link_tdg"
+                >
+            </div>
+          </div>
+        
+        </div>
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Conferma dati</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div style="display: flex;align-content:center;color:red;" *ngIf="error">
+              {{error}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</div>
+
+<div style="display: flex;align-content:center;color:red;" *ngIf="error && !game">
+  {{error}}
+</div>

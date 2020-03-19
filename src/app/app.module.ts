@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { Ng2CompleterModule } from "ng2-completer";
+
 import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,6 +31,9 @@ import { PasswordValidatorDirective } from './password-validator.directive';
 import { RecoverComponent } from './recover/recover.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ChangeEmailComponent } from './change-email/change-email.component';
+import { AddGameComponent } from './add-game/add-game.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { EditGameComponent } from './edit-game/edit-game.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +45,9 @@ import { ChangeEmailComponent } from './change-email/change-email.component';
     PasswordValidatorDirective,
     RecoverComponent,
     ChangePasswordComponent,
-    ChangeEmailComponent
+    ChangeEmailComponent,
+    AddGameComponent,
+    EditGameComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +56,7 @@ import { ChangeEmailComponent } from './change-email/change-email.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    Ng2CompleterModule,
     FormsModule,
     ReactiveFormsModule,
     MatToolbarModule,
@@ -57,7 +67,10 @@ import { ChangeEmailComponent } from './change-email/change-email.component';
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

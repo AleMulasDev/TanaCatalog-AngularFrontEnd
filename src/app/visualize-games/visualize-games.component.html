@@ -1,1 +1,69 @@
-<p>visualize-games works!</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Benvenuto in TanaCatalog, ecco l'elenco dei giochi in database</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" style="margin-bottom:15px;">
+      <mat-divider></mat-divider>
+      <button mat-raised-button [routerLink]="['/addGame']"
+      routerLinkActive="router-link-active" style="margin-bottom: 10px; margin-top: 10px;">
+      Aggiungi gioco
+      </button>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+      <table class="table table-striped" *ngIf='this.games'>
+        <thead class="thead-dark">
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Titolo</th>
+            <th>Link tdg</th>
+            <th>Giocatori</th>
+            <th>Tempo di gioco</th>
+            <th>Età</th>
+            <th>Link BoardGameGeek</th>
+            <th>Prezzo</th>
+            <th *ngIf='isLogged()'></th>
+          </tr>
+        </thead>
+        <tr *ngFor='let game of this.games; let i = index'>
+          <td>
+            <img [src]='getImage(game)' style="height: 50px;" *ngIf='game.thumbnail'>
+          </td>
+          <td>{{game.id || "-"}}</td>
+          <td>{{game.title || "-"}}</td>
+          <td>{{game.link_tdg || "-"}}</td>
+          <td>{{game.players || "-"}}</td>
+          <td>{{game.playtime || "-"}}</td>
+          <td>{{game.age || "-"}}</td>
+          <td>
+            <a [href]="'https://www.boardgamegeek.com/boardgame/' + game.gamebgg_id" *ngIf='game.gamebgg_id'>Link</a>
+          </td>
+          <td>{{game.price || "-"}}</td>
+          <td  *ngIf='isLogged()'>
+            <button mat-icon-button [color]="'warn'" (click)='deleteGame(game, i)'>
+              <mat-icon aria-hidden="true">close</mat-icon>
+            </button>
+            <button [routerLink]="['/editGame', game.id]" mat-icon-button [color]="'primary'"
+              routerLinkActive="router-link-active">
+              <mat-icon aria-hidden="true">edit</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <span *ngIf="this.error" style="color: red;">{{error}}</span>
+    </div>
+  </div>
+</div>

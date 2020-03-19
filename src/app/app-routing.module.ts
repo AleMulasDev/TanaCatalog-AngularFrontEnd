@@ -8,6 +8,8 @@ import { RegisterComponent } from './register/register.component';
 import { RecoverComponent } from './recover/recover.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ChangeEmailComponent } from './change-email/change-email.component';
+import { AddGameComponent } from './add-game/add-game.component';
+import { EditGameComponent } from './edit-game/edit-game.component';
 
 import { AuthGuard } from './_helpers/auth.guard';
 
@@ -20,6 +22,8 @@ const routes: Routes = [
   { path: 'recover', component: RecoverComponent},
   { path: 'changePassword' , component: ChangePasswordComponent, canActivate: [AuthGuard] },
   { path: 'changeEmail' , component: ChangeEmailComponent, canActivate: [AuthGuard] },
+  { path: 'addGame', component: AddGameComponent, canActivate: [AuthGuard] },
+  { path: 'editGame/:id', component: EditGameComponent, canActivate: [AuthGuard] }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
