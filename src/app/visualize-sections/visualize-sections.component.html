@@ -1,0 +1,79 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Ecco l'elenco delle sezioni di cui fai parte</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+      <table class="table table-striped" *ngIf='this.sections'>
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>Titolo</th>
+            <th *ngIf='isLogged()'></th>
+          </tr>
+        </thead>
+        <tr *ngFor='let section of this.sections; let i = index'>
+          <ng-container *ngIf='i != editIndex'>
+            <td>{{section.id || "-"}}</td>
+            <td>{{section.title || "-"}}</td>
+            <td  *ngIf='isLogged()'>
+              <button mat-icon-button [color]="'warn'" (click)='deleteSection(section, i)'>
+                <mat-icon aria-hidden="true">close</mat-icon>
+              </button>
+              <button (click)='startEdit(i, section)' mat-icon-button [color]="'primary'">
+                <mat-icon aria-hidden="true">edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-container *ngIf='i == editIndex'>
+            <td>{{section.id || "-"}}</td>
+            <td>
+              <div class="form-group">
+                <input type="text" name="title" id="title" class="form-control"
+                [(ngModel)]="section.title"
+                >
+              </div>
+            </td>
+            <td *ngIf='isLogged()'>
+              <button (click)='edit(section)' mat-icon-button [color]="'primary'">
+                <mat-icon aria-hidden="true">check</mat-icon>
+              </button>
+              <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+                <mat-icon aria-hidden="true">undo</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+        </tr>
+        <tr>
+          <td colspan="3" *ngIf='!isAdding'>
+            <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+            Aggiungi sezione
+            </button>
+          </td>
+          <td colspan="2" *ngIf='isAdding'>
+            <div class="form-group">
+              <input type="text" name="addTitle" id="addTitle" class="form-control"
+              [(ngModel)]="addingSectionTitle" placeholder="Nome sezione"
+              >
+            </div>
+          </td>
+          <td *ngIf='isAdding'>
+            <button (click)='add()' mat-icon-button [color]="'primary'">
+              <mat-icon aria-hidden="true">check</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <span *ngIf="this.error" style="color: red;">{{error}}</span>
+    </div>
+  </div>
+</div>
