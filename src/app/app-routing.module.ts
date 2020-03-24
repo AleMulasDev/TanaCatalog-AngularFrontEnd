@@ -10,14 +10,17 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ChangeEmailComponent } from './change-email/change-email.component';
 import { AddGameComponent } from './add-game/add-game.component';
 import { EditGameComponent } from './edit-game/edit-game.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import { VisualizeSectionsComponent } from './visualize-sections/visualize-sections.component';
 
 import { AuthGuard } from './_helpers/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: VisualizeGamesComponent },
+  { path: '', component: HomePageComponent },
+  { path: 'visualizeGames', component: VisualizeGamesComponent, canActivate: [AuthGuard] },
+  { path: 'visualizeSections', component: VisualizeSectionsComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
-  // { path: 'admin', component: AdminComponent },
   { path: 'login', component: LoginComponent },
   { path: 'recover', component: RecoverComponent},
   { path: 'changePassword' , component: ChangePasswordComponent, canActivate: [AuthGuard] },
