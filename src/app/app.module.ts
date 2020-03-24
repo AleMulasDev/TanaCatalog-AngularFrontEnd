@@ -34,6 +34,8 @@ import { ChangeEmailComponent } from './change-email/change-email.component';
 import { AddGameComponent } from './add-game/add-game.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EditGameComponent } from './edit-game/edit-game.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import { VisualizeSectionsComponent } from './visualize-sections/visualize-sections.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { EditGameComponent } from './edit-game/edit-game.component';
     ChangePasswordComponent,
     ChangeEmailComponent,
     AddGameComponent,
-    EditGameComponent
+    EditGameComponent,
+    HomePageComponent,
+    VisualizeSectionsComponent,
   ],
   imports: [
     BrowserModule,

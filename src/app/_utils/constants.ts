@@ -12,6 +12,8 @@ const BASE_PATH_GAMES = `${BASE_PATH}/games`;
 const SEARCHBGG_GAME_PATH = `${BASE_PATH}/searchBgg`;
 const FETCHBGG_GAME_PATH = `${BASE_PATH}/fetchBgg`;
 
+const BASE_PATH_SECTIONS = `${BASE_PATH}/sections`;
+
 const APP_ADDRESS = `http://localhost:4200`;
 const APP_LOGIN_PATH = `${APP_ADDRESS}/login`;
 const APP_RECOVER_PATH = `${APP_ADDRESS}/recover`;
@@ -33,13 +35,14 @@ export const constant  = {
     CHANGE_EMAIL_PATH,
     BASE_PATH_GAMES,
     SEARCHBGG_GAME_PATH,
-    FETCHBGG_GAME_PATH
+    FETCHBGG_GAME_PATH,
+    BASE_PATH_SECTIONS,
   },
   client: {
     APP_ADDRESS,
     APP_LOGIN_PATH,
     APP_RECOVER_PATH,
     APP_CHANGEPASS_PATH,
-    APP_AFTERLOGIN_CHANGEPASS
+    APP_AFTERLOGIN_CHANGEPASS,
   }
 };
