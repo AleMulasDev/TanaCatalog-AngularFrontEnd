@@ -24,13 +24,32 @@
             <!-- Navbar -->
             <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/']"
               routerLinkActive="router-link-active">
-              <mat-icon aria-hidden="true">view_list</mat-icon>Visualizza giochi
+              <mat-icon matListIcon aria-hidden="true">home</mat-icon><p matLine>Home</p>
+            </button>
+            <mat-divider></mat-divider>
+            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/visualizeGames']"
+              routerLinkActive="router-link-active">
+              <mat-icon matListIcon aria-hidden="true">games</mat-icon><p matLine>Visualizza giochi</p>
+            </button>
+            <mat-divider></mat-divider>
+            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/visualizeSections']"
+              routerLinkActive="router-link-active">
+              <mat-icon matListIcon aria-hidden="true">view_stream</mat-icon><p matLine>Visualizza sezioni</p>
             </button>
             <mat-divider></mat-divider>
             <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/admin']"
               routerLinkActive="router-link-active">
-              <mat-icon aria-hidden="true">settings</mat-icon>Admin
+              <mat-icon matListIcon aria-hidden="true">settings</mat-icon><p matLine>Admin</p>
             </button>
+            <ng-container *ngIf='sections'>
+              <ng-container *ngFor='let section of sections'>
+                <mat-divider></mat-divider>
+            <button class="navButton" (click)="sidenav.close()" mat-list-item 
+              >
+              <mat-icon matListIcon aria-hidden="true">arrow_right_alt</mat-icon><p matLine>{{section.title}}</p>
+            </button>
+              </ng-container>
+            </ng-container>
           </mat-action-list>
           <mat-card class="loginArea">
 

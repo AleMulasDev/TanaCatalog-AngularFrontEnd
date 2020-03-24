@@ -1,5 +1,6 @@
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-
+import { SectionService } from './_services/section.service';
+import { Section } from './_models/Section';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +14,8 @@ import { AuthenticationService } from './_services/authentication.service';
 export class AppComponent implements OnDestroy {
   title = 'Tana dei Goblin';
   isMediumMonitor = true;
+  sections: Section[];
+  error; string;
 
   get isLogged(): boolean {
     if (this.auth.currentTokenValue != null) {
@@ -26,8 +29,14 @@ export class AppComponent implements OnDestroy {
     this.auth.logout();
   }
 
-  constructor(breakpointObserver: BreakpointObserver, private auth: AuthenticationService,
+  constructor(private s: SectionService, breakpointObserver: BreakpointObserver, private auth: AuthenticationService,
               private _snackBar: MatSnackBar) {
+    s.retrieveSectionList()
+    .then(value => {
+      this.sections = value instanceof Array ? value : undefined;
+    }).catch(err => {
+      this.error = err;
+    });
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait
