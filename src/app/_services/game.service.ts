@@ -5,8 +5,6 @@ import { BggGameSearch } from '../_models/BggGameSearch';
 import { BggGameData } from '../_models/bggGameData';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { constant } from '../_utils/constants';
-import xml2js from 'xml2js';
-const parseString = xml2js.parseString;
 
 @Injectable({
   providedIn: 'root'
