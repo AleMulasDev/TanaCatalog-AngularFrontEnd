@@ -44,10 +44,11 @@
             <ng-container *ngIf='sections'>
               <ng-container *ngFor='let section of sections'>
                 <mat-divider></mat-divider>
-            <button class="navButton" (click)="sidenav.close()" mat-list-item 
-              >
-              <mat-icon matListIcon aria-hidden="true">arrow_right_alt</mat-icon><p matLine>{{section.title}}</p>
-            </button>
+                  <button class="navButton" (click)="sidenav.close()" mat-list-item 
+                  [routerLink]="['/section', section.id]"  routerLinkActive="router-link-active"
+                  >
+                    <mat-icon matListIcon aria-hidden="true">arrow_right_alt</mat-icon><p matLine>{{section.title}}</p>
+                  </button>
               </ng-container>
             </ng-container>
           </mat-action-list>

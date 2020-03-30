@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +37,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EditGameComponent } from './edit-game/edit-game.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { VisualizeSectionsComponent } from './visualize-sections/visualize-sections.component';
+import { SectionComponent } from './section/section.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { VisualizeSectionsComponent } from './visualize-sections/visualize-secti
     EditGameComponent,
     HomePageComponent,
     VisualizeSectionsComponent,
+    SectionComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,7 +77,8 @@ import { VisualizeSectionsComponent } from './visualize-sections/visualize-secti
     MatSnackBarModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

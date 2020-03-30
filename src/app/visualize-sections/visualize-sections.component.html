@@ -19,7 +19,10 @@
         <tr *ngFor='let section of this.sections; let i = index'>
           <ng-container *ngIf='i != editIndex'>
             <td>{{section.id || "-"}}</td>
-            <td>{{section.title || "-"}}</td>
+            <td [routerLink]="['/section', section.id]"  routerLinkActive="router-link-active"
+            style="cursor: pointer;">
+              {{section.title || "-"}}
+            </td>
             <td  *ngIf='isLogged()'>
               <button mat-icon-button [color]="'warn'" (click)='deleteSection(section, i)'>
                 <mat-icon aria-hidden="true">close</mat-icon>

@@ -13,6 +13,7 @@ const SEARCHBGG_GAME_PATH = `${BASE_PATH}/searchBgg`;
 const FETCHBGG_GAME_PATH = `${BASE_PATH}/fetchBgg`;
 
 const BASE_PATH_SECTIONS = `${BASE_PATH}/sections`;
+const HOLDER_PATH = `${BASE_PATH_SECTIONS}/holder`;
 
 const APP_ADDRESS = `http://localhost:4200`;
 const APP_LOGIN_PATH = `${APP_ADDRESS}/login`;
@@ -37,6 +38,7 @@ export const constant  = {
     SEARCHBGG_GAME_PATH,
     FETCHBGG_GAME_PATH,
     BASE_PATH_SECTIONS,
+    HOLDER_PATH,
   },
   client: {
     APP_ADDRESS,

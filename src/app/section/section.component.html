@@ -1,0 +1,141 @@
+<ng-container *ngIf='section'>
+  <h2>Stai visualizzando: {{section.title}}</h2>
+
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Giochi">
+
+    </mat-tab>
+    <mat-tab label="Custodi">
+
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Titolo</th>
+              <th>Indirizzo</th>
+              <th>Cap</th>
+              <th>Città</th>
+              <th></th>
+            </tr>
+          </thead>
+          <ng-container *ngIf='holders'>
+            <tr *ngFor='let holder of holders; let i = index'>
+
+              <ng-container *ngIf='i == editIndex'>
+                <td colspan="2">
+                  <div class="form-group">
+                    <input type="text" name="addTitle" id="addTitle" class="form-control"
+                    [(ngModel)]="holder.title" placeholder="Nome Custode"
+                    >
+                  </div>
+                </td>
+                <td colspan="1">
+                  <div class="form-group">
+                    <input type="text" name="addTitle" id="addTitle" class="form-control"
+                    [(ngModel)]="holder.address" placeholder="Indirizzo"
+                    >
+                  </div>
+                </td>
+                <td colspan="1">
+                  <div class="form-group">
+                    <input type="text" name="addTitle" id="addTitle" class="form-control"
+                    [(ngModel)]="holder.cap" placeholder="CAP"
+                    >
+                  </div>
+                </td>
+                <td colspan="1">
+                  <div class="form-group">
+                    <input type="text" name="addTitle" id="addTitle" class="form-control"
+                    [(ngModel)]="holder.city" placeholder="Città"
+                    >
+                  </div>
+                </td>
+                <td>
+                  <button (click)='edit(holder)' mat-icon-button [color]="'primary'">
+                    <mat-icon aria-hidden="true">check</mat-icon>
+                  </button>
+                  <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+                    <mat-icon aria-hidden="true">undo</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <ng-container *ngIf='i != editIndex'>
+                <td>{{holder.id || "-"}}</td>
+                <td>{{holder.title || "-"}}</td>
+                <td>{{holder.address || "-"}}</td>
+                <td>{{holder.cap || "-"}}</td>
+                <td>{{holder.city || "-"}}</td>
+                <td>
+                  <button mat-icon-button [color]="'warn'" (click)='removeHolders(holder.id, i)'>
+                    <mat-icon aria-hidden="true">close</mat-icon>
+                  </button>
+                  <button mat-icon-button [color]="'primary'" (click)='startEdit(i, holder)'>
+                    <mat-icon aria-hidden="true">edit</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+            </tr>
+          </ng-container>
+          <tr *ngIf='!isAdding'>
+            <td colspan="6">
+              <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+              Aggiungi sezione
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf='isAdding'>
+            <td colspan="2">
+              <div class="form-group">
+                <input type="text" name="addTitle" id="addTitle" class="form-control"
+                [(ngModel)]="newHolder.title" placeholder="Nome Custode"
+                >
+              </div>
+            </td>
+            <td colspan="1">
+              <div class="form-group">
+                <input type="text" name="addTitle" id="addTitle" class="form-control"
+                [(ngModel)]="newHolder.address" placeholder="Indirizzo"
+                >
+              </div>
+            </td>
+            <td colspan="1">
+              <div class="form-group">
+                <input type="text" name="addTitle" id="addTitle" class="form-control"
+                [(ngModel)]="newHolder.cap" placeholder="CAP"
+                >
+              </div>
+            </td>
+            <td colspan="1">
+              <div class="form-group">
+                <input type="text" name="addTitle" id="addTitle" class="form-control"
+                [(ngModel)]="newHolder.city" placeholder="Città"
+                >
+              </div>
+            </td>
+            <td colspan="1">
+              <button (click)='add()' mat-icon-button [color]="'primary'">
+                <mat-icon aria-hidden="true">check</mat-icon>
+              </button>
+              <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+                <mat-icon aria-hidden="true">undo</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </table>
+        </div>
+
+
+    </mat-tab>
+  </mat-tab-group>
+
+</ng-container>
+<ng-container  *ngIf='!section'>
+  <h3>Caricamento in corso...</h3>
+  <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso'></mat-progress-bar>
+</ng-container>
+<ng-container *ngIf='error'>
+  <p style="color:red;">{{error}}</p>
+</ng-container>

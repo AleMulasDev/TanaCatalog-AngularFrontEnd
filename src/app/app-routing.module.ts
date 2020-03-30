@@ -12,6 +12,7 @@ import { AddGameComponent } from './add-game/add-game.component';
 import { EditGameComponent } from './edit-game/edit-game.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { VisualizeSectionsComponent } from './visualize-sections/visualize-sections.component';
+import { SectionComponent } from './section/section.component';
 
 import { AuthGuard } from './_helpers/auth.guard';
 
@@ -26,7 +27,8 @@ const routes: Routes = [
   { path: 'changePassword' , component: ChangePasswordComponent, canActivate: [AuthGuard] },
   { path: 'changeEmail' , component: ChangeEmailComponent, canActivate: [AuthGuard] },
   { path: 'addGame', component: AddGameComponent, canActivate: [AuthGuard] },
-  { path: 'editGame/:id', component: EditGameComponent, canActivate: [AuthGuard] }
+  { path: 'editGame/:id', component: EditGameComponent, canActivate: [AuthGuard] },
+  { path: 'section/:id', component: SectionComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

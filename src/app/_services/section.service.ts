@@ -3,6 +3,7 @@ import { AuthenticationService } from './authentication.service';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { constant } from '../_utils/constants';
 import { Section } from '../_models/Section';
+import { Holder } from '../_models/Holder';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +115,137 @@ export class SectionService {
           resolve('Sezione rimossa con successo');
         } else {
           reject('Impossibile ottenere una risposta dal server');
+        }
+      }, err => {
+        reject('Si è verificato un errore di connessione: ' + err);
+      });
+    });
+  }
+
+  //
+  //          GET HOLDERS
+  //
+  getHolders(sectionID: string): Promise<Holder[] | string> {
+    const token = this.auth.currentTokenValue;
+    if (!token) {
+      return Promise.reject('Unlogged user');
+    }
+    const params = `?token=${encodeURIComponent(token)}&sectionID=${encodeURIComponent(sectionID)}`;
+    return new Promise((resolve, reject) => {
+      this.http.get<any>(constant.server.HOLDER_PATH + params)
+      .subscribe(response => {
+        if (response.status && response.status === 'ok') {
+          try {
+            if (!response.holders) {
+              resolve();
+            } else {
+              const holders = new Array();
+              for (const holder of response.holders) {
+                holders.push(new Holder(holder));
+              }
+              resolve(holders);
+            }
+          } catch (err) {
+            reject('Errore elaborando la lista di custodi...');
+            console.error(err);
+          }
+        } else {
+          reject('Impossibile ottenere una risposta dal server');
+        }
+      }, err => {
+        reject('Si è verificato un errore di connessione: ' + err);
+      });
+    });
+  }
+
+  //
+  //          ADD HOLDER
+  //
+  addHolder(holder: Holder, sectionID: string): Promise<string> {
+    const formdata: FormData = new FormData();
+    // tslint:disable-next-line: forin
+    for (const obj in holder) {
+      formdata.set(obj, holder[obj]);
+    }
+    formdata.set('sectionID', sectionID);
+    const token = this.auth.currentTokenValue;
+    if (!token) {
+      return Promise.reject('Unlogged user');
+    }
+    formdata.set('token', token);
+    return new Promise((resolve, reject) => {
+      this.http.put<any>(constant.server.HOLDER_PATH,
+      formdata)
+      .subscribe(response => {
+        if (response.status && response.status === 'ok') {
+          if (response.holderID) {
+            resolve(response.holderID);
+          } else {
+            resolve();
+          }
+        } else {
+          reject('Impossibile ottenere una risposta dal server');
+          console.error(response);
+        }
+      }, err => {
+        reject('Si è verificato un errore di connessione: ' + err);
+      });
+    });
+  }
+
+  //
+  //          REMOVE HOLDER
+  //
+  removeHolder(holderID, sectionID: string): Promise<string> {
+    const token = this.auth.currentTokenValue;
+    if (!token) {
+      return Promise.reject('Unlogged user');
+    }
+    const params = `?token=${encodeURIComponent(token)}&sectionID=${encodeURIComponent(sectionID)}&id=${encodeURIComponent(holderID)}`;
+    return new Promise((resolve, reject) => {
+      this.http.delete<any>(constant.server.HOLDER_PATH + params)
+      .subscribe(response => {
+        if (response.status && response.status === 'ok') {
+          resolve();
+        } else {
+          reject('Impossibile ottenere una risposta dal server');
+          console.error(response);
+        }
+      }, err => {
+        reject('Si è verificato un errore di connessione: ' + err);
+      });
+    });
+  }
+
+  //
+  //          MODIFY HOLDER
+  //
+  modifyHolder(holder: Holder, sectionID: string, holderID): Promise<string> {
+    const formdata: FormData = new FormData();
+    // tslint:disable-next-line: forin
+    for (const obj in holder) {
+      formdata.set(obj, holder[obj]);
+    }
+    formdata.set('sectionID', sectionID);
+    formdata.set('holderID', holderID);
+    const token = this.auth.currentTokenValue;
+    if (!token) {
+      return Promise.reject('Unlogged user');
+    }
+    formdata.set('token', token);
+    return new Promise((resolve, reject) => {
+      this.http.put<any>(constant.server.HOLDER_PATH,
+      formdata)
+      .subscribe(response => {
+        if (response.status && response.status === 'ok') {
+          if (response.holderID) {
+            resolve(response.holderID);
+          } else {
+            resolve();
+          }
+        } else {
+          reject('Impossibile ottenere una risposta dal server');
+          console.error(response);
         }
       }, err => {
         reject('Si è verificato un errore di connessione: ' + err);
