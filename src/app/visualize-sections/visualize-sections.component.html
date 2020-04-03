@@ -11,19 +11,17 @@
       <table class="table table-striped" *ngIf='this.sections'>
         <thead class="thead-dark">
           <tr>
-            <th>ID</th>
-            <th>Titolo</th>
+            <th style="width: 80%;">Titolo</th>
             <th *ngIf='isLogged()'></th>
           </tr>
         </thead>
         <tr *ngFor='let section of this.sections; let i = index'>
           <ng-container *ngIf='i != editIndex'>
-            <td>{{section.id || "-"}}</td>
             <td [routerLink]="['/section', section.id]"  routerLinkActive="router-link-active"
             style="cursor: pointer;">
               {{section.title || "-"}}
             </td>
-            <td  *ngIf='isLogged()'>
+            <td  *ngIf='isLogged() && section.isOwner==1'>
               <button mat-icon-button [color]="'warn'" (click)='deleteSection(section, i)'>
                 <mat-icon aria-hidden="true">close</mat-icon>
               </button>
@@ -32,8 +30,7 @@
               </button>
             </td>
           </ng-container>
-          <ng-container *ngIf='i == editIndex'>
-            <td>{{section.id || "-"}}</td>
+          <ng-container *ngIf='i == editIndex'>\
             <td>
               <div class="form-group">
                 <input type="text" name="title" id="title" class="form-control"
@@ -67,6 +64,9 @@
           <td *ngIf='isAdding'>
             <button (click)='add()' mat-icon-button [color]="'primary'">
               <mat-icon aria-hidden="true">check</mat-icon>
+            </button>
+            <button (click)='stopAdd()' mat-icon-button [color]="'accent'">
+              <mat-icon aria-hidden="true">undo</mat-icon>
             </button>
           </td>
         </tr>

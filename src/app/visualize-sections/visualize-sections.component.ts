@@ -45,13 +45,18 @@ export class VisualizeSectionsComponent implements OnInit {
   add() {
     this.s.addSection(this.addingSectionTitle)
     .then(value => {
-      if (value) { this.sections.push(new Section({id: value, title: this.addingSectionTitle})); }
+      if (value) { this.sections.push(new Section({id: value, title: this.addingSectionTitle, isOwner: true})); }
       this.snackBar.open('Sezione aggiunta con successo', 'Chiudi', {duration: 3000});
       this.isAdding = false;
       this.addingSectionTitle = '';
     }).catch(err => {
       this.error = err;
     });
+  }
+
+  stopAdd() {
+    this.addingSectionTitle = '';
+    this.isAdding = false;
   }
 
   startEdit(index: number, section: Section) {
