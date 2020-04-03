@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SectionService } from '../_services/section.service';
-import { Section } from '../_models/Section';
+import { Section, UserPermission } from '../_models/Section';
 import { GameService } from '../_services/game.service';
 import { Holder } from '../_models/Holder';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-section',
@@ -17,17 +19,14 @@ export class SectionComponent implements OnInit {
   section: Section;
   error: string;
   holders: Holder[];
-
-  isAdding = false;
-  newHolder: Holder;
-
-  editIndex = -1;
-  editingHolder: Holder;
+  isMediumMonitor: boolean;
+  userPermission: UserPermission;
 
   constructor(private route: ActivatedRoute,
               private s: SectionService,
               private g: GameService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              breakpointObserver: BreakpointObserver) {
     this.route.params.subscribe(params => {
       if (params.id != null && params.id !== '') {
         this.sectionID = params.id;
@@ -37,7 +36,13 @@ export class SectionComponent implements OnInit {
           for (const section of this.sections) {
             if (section.id == this.sectionID) {
               this.section = section;
-              this.getHolders(this.sectionID);
+              this.s.retrieveSectionPermission(this.section.id)
+              .then(val => {
+                this.userPermission = val instanceof UserPermission ? val : undefined;
+              }).catch(err => {
+                console.error(err);
+                this.error = 'Errore, non è stato possibile elaborare i tuoi permessi';
+              });
             }
           }
           if (this.section == null) {
@@ -50,83 +55,21 @@ export class SectionComponent implements OnInit {
         this.error = 'Errore, non è stata trovata la sezione richiesta';
       }
     });
-  }
 
-  getHolders(sectionID) {
-    this.s.getHolders(sectionID)
-    .then(val => {
-      if (val instanceof Array) {
-        this.holders = val;
+    breakpointObserver.observe([
+      Breakpoints.HandsetLandscape,
+      Breakpoints.HandsetPortrait
+    ]).subscribe(result => {
+      if (result.matches) {
+        this.isMediumMonitor = false;
       } else {
-        this.holders = undefined;
+        this.isMediumMonitor = true;
       }
-    }).catch(err => {
-      this.error = err;
-    })
-  }
-
-  startAdd() {
-    this.newHolder = new Holder();
-    this.isAdding = true;
-  }
-
-  stopAdding() {
-    this.newHolder = new Holder();
-    this.isAdding = false;
-  }
-
-  add() {
-    this.s.addHolder(this.newHolder, this.sectionID)
-    .then(val => {
-      if (val) {
-        this.newHolder.id = val;
-        this.holders = this.holders ? this.holders : new Array();
-        this.holders.push(this.newHolder);
-        this.newHolder = new Holder();
-        this.snackBar.open('Custode aggiunto con successo', 'Chiudi', {duration: 3000});
-        this.error = '';
-        this.isAdding = false;
-      }
-    }).catch(err => {
-      console.error(err);
-      this.error = 'Errore nell\'aggiunta del custode';
     });
   }
 
-  removeHolders(holderID, index) {
-    this.s.removeHolder(holderID, this.sectionID)
-    .then(val => {
-      this.snackBar.open('Custode rimosso con successo', 'Chiudi', {duration: 3000});
-      this.error = '';
-      this.holders.splice(index, 1);
-    }).catch(err => {
-      this.error = `Errore nell'eliminazione del custode`;
-      console.error(err);
-    });
-  }
-
-  startEdit(index: number, holder: Holder) {
-    if (this.editIndex !== -1) {
-      this.holders[this.editIndex] = this.editingHolder;
-    }
-    this.editingHolder = new Holder(holder);
-    this.editIndex = index;
-  }
-
-  undoEdit() {
-    this.holders[this.editIndex] = this.editingHolder;
-    this.editIndex = -1;
-    this.editingHolder = null;
-  }
-
-  edit(holder: Holder) {
-    this.s.modifyHolder(holder, this.sectionID, holder.id)
-    .then(value => {
-      this.snackBar.open('Custode modificato con successo', 'Chiudi', {duration: 3000});
-      this.editIndex = -1;
-    }).catch(err => {
-      this.error = err;
-    });
+  displayChange(event: MatSliderChange) {
+    this.isMediumMonitor = event.value === 1 ? true : false;
   }
 
   ngOnInit() {
