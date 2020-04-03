@@ -3,7 +3,7 @@ import { AuthenticationService } from './authentication.service';
 import { Game } from '../_models/Game';
 import { BggGameSearch } from '../_models/BggGameSearch';
 import { BggGameData } from '../_models/bggGameData';
-import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { constant } from '../_utils/constants';
 
 @Injectable({
@@ -17,8 +17,15 @@ export class GameService {
   //          GAME LIST
   //
   retrieveGameList(): Promise<Game[] | string> {
+    let token = this.auth.currentTokenValue;
+    let params;
+    if (token) {
+      params = `?token=${encodeURIComponent(token)}`;
+    } else {
+      params = '';
+    }
     return new Promise((resolve, reject) => {
-      this.http.get<any>(constant.server.BASE_PATH_GAMES)
+      this.http.get<any>(constant.server.BASE_PATH_GAMES+params)
       .subscribe(response => {
         if (response.status && response.status === 'ok') {
           if (response.games) {
@@ -120,11 +127,7 @@ export class GameService {
   //          ADD GAME
   //
   addGame(game: Game, file?: File): Promise<string> {
-    const httpOption = {
-      headers: new HttpHeaders({
-        'Content-Type':  'multipart/form-data',
-      })
-    };
+    return new Promise((resolve, reject) => {
     const formdata: FormData = new FormData();
     if (file) {
       formdata.set('image', file, file.name);
@@ -134,22 +137,22 @@ export class GameService {
       formdata.set(obj, game[obj]);
     }
     const token = this.auth.currentTokenValue;
+    if (!token) {
+      reject('Unlogged user');
+    }
     formdata.set('token', token);
-    const {id, title, description, link_tdg, players, playtime, age, gamebgg_id, image, thumbnail, price} = game;
-    return new Promise((resolve, reject) => {
-      this.http.put<any>(constant.server.BASE_PATH_GAMES,
-      // {id, title, description, link_tdg, players, playtime, age, gamebgg_id, image, thumbnail, price, token})
-      formdata)
-      .subscribe(response => {
-        if (response.status && response.status === 'ok') {
-          resolve('Gioco modificato con successo');
-        } else {
-          reject('Impossibile ottenere una risposta dal server');
-          console.error(response);
-        }
-      }, err => {
-        reject('Si è verificato un errore di connessione: ' + err);
-      });
+    this.http.put<any>(constant.server.BASE_PATH_GAMES,
+    formdata)
+    .subscribe(response => {
+      if (response.status && response.status === 'ok') {
+        resolve('Operazione eseguita con successo');
+      } else {
+        reject('Impossibile ottenere una risposta dal server');
+        console.error(response);
+      }
+    }, err => {
+      reject('Si è verificato un errore di connessione: ' + err);
+    });
     });
   }
 
@@ -157,25 +160,25 @@ export class GameService {
   //          DELETE GAME
   //
   deleteGame(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
     const formdata: FormData = new FormData();
     formdata.set('id', id);
     let token = this.auth.currentTokenValue;
     if (!token) {
-      return Promise.reject('Unlogged user');
+      reject('Unlogged user');
     }
     const params = `?token=${encodeURIComponent(token)}&id=${encodeURIComponent(id)}`;
     formdata.set('token', token);
-    return new Promise((resolve, reject) => {
-      this.http.delete<any>(constant.server.BASE_PATH_GAMES+params)
-      .subscribe(response => {
-        if (response.status && response.status === 'ok') {
-          resolve('Gioco rimosso con successo');
-        } else {
-          reject('Impossibile ottenere una risposta dal server');
-        }
-      }, err => {
-        reject('Si è verificato un errore di connessione: ' + err);
-      });
+    this.http.delete<any>(constant.server.BASE_PATH_GAMES+params)
+    .subscribe(response => {
+      if (response.status && response.status === 'ok') {
+        resolve('Gioco rimosso con successo');
+      } else {
+        reject(response.error);
+      }
+    }, err => {
+      reject('Si è verificato un errore di connessione: ' + err);
+    });
     });
   }
 }
