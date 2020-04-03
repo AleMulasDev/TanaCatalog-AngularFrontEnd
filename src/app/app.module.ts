@@ -21,6 +21,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -38,6 +42,9 @@ import { EditGameComponent } from './edit-game/edit-game.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { VisualizeSectionsComponent } from './visualize-sections/visualize-sections.component';
 import { SectionComponent } from './section/section.component';
+import { HoldersComponent } from './holders/holders.component';
+import { GameComponent } from './game/game.component';
+import { CollaboratorsComponent } from './collaborators/collaborators.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +62,9 @@ import { SectionComponent } from './section/section.component';
     HomePageComponent,
     VisualizeSectionsComponent,
     SectionComponent,
+    HoldersComponent,
+    GameComponent,
+    CollaboratorsComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,6 +89,10 @@ import { SectionComponent } from './section/section.component';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTabsModule,
+    MatExpansionModule,
+    MatSliderModule,
+    MatGridListModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
