@@ -38,4 +38,12 @@ export class Game {
   image;
   thumbnail;
   price;
+  canUpdateGame: string;
+}
+
+export class GamePermission {
+  name;
+  ownerID;
+  gameID;
+  canUpdateGame;
 }
