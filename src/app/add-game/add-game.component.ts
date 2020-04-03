@@ -31,6 +31,7 @@ export class AddGameComponent implements OnInit {
     this.game = new Game();
     this.canFind = false;
     this.searched = true;
+    this.game.canUpdateGame = 'true';
   }
 
   handleFile(files: FileList) {
@@ -54,7 +55,7 @@ export class AddGameComponent implements OnInit {
     .then(val => {
       const snakRef = this.snackBar.open(val, 'Chiudi', {duration: 3000});
       snakRef.afterDismissed().subscribe(() => {
-        this.router.navigate(['']);
+        this.router.navigate(['visualizeGames']);
       });
     }).catch(err => {
       this.snackBar.open(err, 'Chiudi', {duration: 3000});
@@ -75,6 +76,7 @@ export class AddGameComponent implements OnInit {
           this.searched = true;
           this.game = new Game(val[0]);
           this.game.thumbnail = val[0].thumbnailURI;
+          this.game.canUpdateGame = 'true';
         }
       }).catch(err => {
         this.error = err;
