@@ -1,0 +1,230 @@
+
+<div class="table-responsive" *ngIf='isMediumMonitor else lista'>
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Titolo</th>
+        <th>Indirizzo</th>
+        <th>Cap</th>
+        <th>Città</th>
+        <th></th>
+      </tr>
+    </thead>
+    <ng-container *ngIf='holders'>
+      <tr *ngFor='let holder of holders; let i = index'>
+
+        <ng-container *ngIf='i == editIndex'>
+          <td>
+            <div class="form-group">
+              <input type="text" name="addTitle" id="addTitle" class="form-control"
+              [(ngModel)]="holder.title" placeholder="Nome Custode"
+              >
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <input type="text" name="addTitle" id="addTitle" class="form-control"
+              [(ngModel)]="holder.address" placeholder="Indirizzo"
+              >
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <input type="text" name="addTitle" id="addTitle" class="form-control"
+              [(ngModel)]="holder.cap" placeholder="CAP"
+              >
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <input type="text" name="addTitle" id="addTitle" class="form-control"
+              [(ngModel)]="holder.city" placeholder="Città"
+              >
+            </div>
+          </td>
+          <td>
+            <button (click)='edit(holder)' mat-icon-button [color]="'primary'">
+              <mat-icon aria-hidden="true">check</mat-icon>
+            </button>
+            <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+              <mat-icon aria-hidden="true">undo</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf='i != editIndex'>
+          <td>{{holder.title || "-"}}</td>
+          <td>{{holder.address || "-"}}</td>
+          <td>{{holder.cap || "-"}}</td>
+          <td>{{holder.city || "-"}}</td>
+          <td>
+            <button mat-icon-button [color]="'warn'" (click)='removeHolders(holder.id, i)'>
+              <mat-icon aria-hidden="true">close</mat-icon>
+            </button>
+            <button mat-icon-button [color]="'primary'" (click)='startEdit(i, holder)'>
+              <mat-icon aria-hidden="true">edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+    <tr *ngIf='!isAdding'>
+      <td colspan="6">
+        <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+        Aggiungi sezione
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf='isAdding'>
+      <td>
+        <div class="form-group">
+          <input type="text" name="addTitle" id="addTitle" class="form-control"
+          [(ngModel)]="newHolder.title" placeholder="Nome Custode"
+          >
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <input type="text" name="addTitle" id="addTitle" class="form-control"
+          [(ngModel)]="newHolder.address" placeholder="Indirizzo"
+          >
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <input type="text" name="addTitle" id="addTitle" class="form-control"
+          [(ngModel)]="newHolder.cap" placeholder="CAP"
+          >
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <input type="text" name="addTitle" id="addTitle" class="form-control"
+          [(ngModel)]="newHolder.city" placeholder="Città"
+          >
+        </div>
+      </td>
+      <td>
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<ng-template #lista>
+  <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+  Aggiungi sezione
+  </button>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]='isAdding' *ngIf='isAdding'>
+      <mat-list>
+        <mat-list-item>
+          <div class="form-group">
+            <input type="text" name="addTitle" id="addTitle" class="form-control"
+            [(ngModel)]="newHolder.title" placeholder="Nome Custode"
+            >
+          </div>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="form-group">
+            <input type="text" name="addTitle" id="addTitle" class="form-control"
+            [(ngModel)]="newHolder.address" placeholder="Indirizzo"
+            >
+          </div>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="form-group">
+            <input type="text" name="addTitle" id="addTitle" class="form-control"
+            [(ngModel)]="newHolder.cap" placeholder="CAP"
+            >
+          </div>
+        </mat-list-item>
+        <mat-list-item>
+          <div class="form-group">
+            <input type="text" name="addTitle" id="addTitle" class="form-control"
+            [(ngModel)]="newHolder.city" placeholder="Città"
+            >
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <mat-action-row>
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel *ngFor='let holder of holders; let i = index'>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{holder.title || '-'}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-list *ngIf='editIndex != i'>
+          <mat-list-item>
+            Indirizzo: <br>
+            {{holder.address || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            CAP: <br>
+            {{holder.cap || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            Città: <br>
+            {{holder.city || 'Non inserita'}}
+          </mat-list-item>
+        </mat-list>
+
+        
+        <mat-list *ngIf='editIndex == i'>
+          <mat-list-item>
+            <label for="indirizzo">Indirizzo</label>
+            <input type="text" name="indirizzo" id="indirizzo" class="form-control"
+            [(ngModel)]="holder.address"
+            >
+          </mat-list-item>
+          <mat-list-item>
+            <label for="cap">CAP</label>
+            <input type="text" name="cap" id="cap" class="form-control"
+            [(ngModel)]="holder.cap"
+            >
+          </mat-list-item>
+          <mat-list-item>
+            <label for="city">Città</label>
+            <input type="text" name="city" id="city" class="form-control"
+            [(ngModel)]="holder.city"
+            >
+          </mat-list-item>
+        </mat-list>
+
+        <mat-action-row *ngIf='isLogged() && editIndex != i'>
+          <button mat-icon-button [color]="'warn'" (click)='removeHolders(holder.id, i)'>
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+          <button mat-icon-button [color]="'primary'" (click)='startEdit(i, holder)'>
+            <mat-icon aria-hidden="true">edit</mat-icon>
+          </button>
+        </mat-action-row>
+
+        <mat-action-row *ngIf='isLogged() && editIndex == i'>
+          <button (click)='edit(holder)' mat-icon-button [color]="'primary'">
+            <mat-icon aria-hidden="true">check</mat-icon>
+          </button>
+          <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+            <mat-icon aria-hidden="true">undo</mat-icon>
+          </button>
+        </mat-action-row>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>
