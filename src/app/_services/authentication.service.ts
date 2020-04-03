@@ -2,17 +2,50 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { constant } from '../_utils/constants';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private currentUserToken: BehaviorSubject<string>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router) {
     this.currentUserToken = new BehaviorSubject<string>(localStorage.getItem('currentUserToken'));
+    this.confirmToken()
+    .then(val => {
+    }).catch(err => {
+    });
   }
 
   public get currentTokenValue(): string {
     return this.currentUserToken.value;
+  }
+
+  async confirmToken() {
+    return new Promise((resolve, reject) => {
+    const token = this.currentTokenValue;
+    if (!token) {
+      reject('Unlogged user');
+    }
+    const params = `?token=${encodeURIComponent(token)}`;
+    this.http.get<any>(constant.server.TOKEN_CHECK_PATH + params
+      ).subscribe(response => {
+      if (response.status && response.status === 'ok') {
+        resolve(true);
+      } else {
+        localStorage.setItem('currentUserToken', '');
+        sessionStorage.setItem('currentUserToken', '');
+        if (this.currentTokenValue != '') {
+          this.currentUserToken.next('');
+          this.router.navigate(['/login']);
+        }
+        this.currentUserToken.next('');
+        resolve(false);
+      }
+    }, err => {
+      reject('Si è verificato un errore di connessione');
+    });
+  });
   }
 
   recover(e: string): Promise<any> {
