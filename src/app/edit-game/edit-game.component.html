@@ -67,6 +67,13 @@
         </div>
         <div class="row">
           <div class="col">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="canUpdateGame" name="canUpdateGame"
+              [(ngModel)]="game.canUpdateGame">
+              <label class="form-check-label" for="canUpdateGame">Permetti agli altri giocatori di modificare il gioco?</label>
+            </div>
+          </div>
+          <div class="col">
             <button type="submit" class="btn btn-primary" style="margin-top: 10px">Conferma dati</button>
           </div>
         </div>

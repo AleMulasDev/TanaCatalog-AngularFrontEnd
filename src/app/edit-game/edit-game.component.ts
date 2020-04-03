@@ -16,11 +16,12 @@ export class EditGameComponent implements OnInit {
   game: Game;
 
   onSubmit() {
+    console.log(this.game.canUpdateGame);
     this.g.addGame(this.game)
     .then(val => {
       const snakRef = this.snackBar.open(val, 'Chiudi', {duration: 3000});
       snakRef.afterDismissed().subscribe(() => {
-        this.router.navigate(['']);
+        this.router.navigate(['visualizeGames']);
       });
     }).catch(err => {
       this.snackBar.open(err, 'Chiudi', {duration: 3000});
