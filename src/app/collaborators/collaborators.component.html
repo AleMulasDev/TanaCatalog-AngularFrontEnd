@@ -1,0 +1,341 @@
+
+<div class="table-responsive" *ngIf='isMediumMonitor else lista'>
+  <!-- ---------------INIZIO TABELLA--------------- -->
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Email</th>
+        <th>Nome</th>
+        <th>Permessi</th>
+        <th></th>
+      </tr>
+    </thead>
+    <ng-container *ngIf='users'>
+      <tr *ngFor='let user of users; let i = index'>
+
+        <!-- --------RIGA EDITING-------- -->
+        <ng-container *ngIf='i == editIndex'>
+          <td>{{user.email || "-"}}</td>
+          <td>{{user.name || "-"}}</td>
+          <td>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canAddGame"
+            [labelPosition]="'after'">
+              Può aggiungere giochi?
+            </mat-checkbox>
+            <br>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canDeleteGame"
+            [labelPosition]="'after'">
+              Può rimuovere giochi?
+            </mat-checkbox>
+            <br>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canUpdateGame"
+            [labelPosition]="'after'">
+              Può aggiornare i giochi?
+            </mat-checkbox>
+            <br>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canAddPeople"
+            [labelPosition]="'after'">
+              Può aggiungere collaboratori?
+            </mat-checkbox>
+            <br>
+            <mat-checkbox
+            [(ngModel)]="user.permission.canModifyPermissions"
+            [labelPosition]="'after'" (click)='modifyPermission(user)'>
+              Può modificare i permessi?
+            </mat-checkbox>
+          </td>
+          
+          <td>
+            <button (click)='edit(user)' mat-icon-button [color]="'primary'">
+              <mat-icon aria-hidden="true">check</mat-icon>
+            </button>
+            <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+              <mat-icon aria-hidden="true">undo</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- --------RIGA VISUALIZZAZIONE-------- -->
+        <ng-container *ngIf='i != editIndex'>
+          <td>{{user.email || "-"}}</td>
+          <td>{{user.name || "-"}}</td>
+          <td>
+            <mat-list>
+              <mat-list-item>
+                Può aggiungere giochi: <br>
+                {{user.permission.canAddGame?'si':'no'}}
+              </mat-list-item>
+              <mat-list-item>
+                Può rimuovere giochi: <br>
+                {{user.permission.canDeleteGame?'si':'no'}}
+              </mat-list-item>
+              <mat-list-item>
+                Può aggiornare i giochi: <br>
+                {{user.permission.canUpdateGame?'si':'no'}}
+              </mat-list-item>
+              <mat-list-item>
+                Può modificare i permessi: <br>
+                {{user.permission.canModifyPermissions?'si':'no'}}
+              </mat-list-item>
+            </mat-list>
+          </td>
+          <td>
+            <button mat-icon-button [color]="'warn'" (click)='removeUser(user.email, i)'>
+              <mat-icon aria-hidden="true">close</mat-icon>
+            </button>
+            <button mat-icon-button [color]="'primary'" (click)='startEdit(i, user)'>
+              <mat-icon aria-hidden="true">edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+    <tr *ngIf='!isAdding'>
+      <td colspan="6">
+        <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+        Aggiungi utente
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf='isAdding'>
+      <!-- --------AGGIUNTA UTENTE-------- -->
+      <td colspan="2">
+        <input type="text" name="addEmail" id="addEmail" class="form-control"
+        [(ngModel)]="newUser.email" placeholder="Email utente"
+        >
+      </td>
+      <td>
+        <mat-checkbox
+        [disabled]='newUser.permission.canModifyPermissions'
+        [(ngModel)]="newUser.permission.canAddGame"
+        [labelPosition]="'after'">
+          Può aggiungere giochi?
+        </mat-checkbox>
+        <br>
+        <mat-checkbox
+        [disabled]='newUser.permission.canModifyPermissions'
+        [(ngModel)]="newUser.permission.canDeleteGame"
+        [labelPosition]="'after'">
+          Può rimuovere giochi?
+        </mat-checkbox>
+        <br>
+        <mat-checkbox
+        [disabled]='newUser.permission.canModifyPermissions'
+        [(ngModel)]="newUser.permission.canUpdateGame"
+        [labelPosition]="'after'">
+          Può aggiornare i giochi?
+        </mat-checkbox>
+        <br>
+        <mat-checkbox
+        [disabled]='newUser.permission.canModifyPermissions'
+        [(ngModel)]="newUser.permission.canAddPeople"
+        [labelPosition]="'after'">
+          Può aggiungere collaboratori?
+        </mat-checkbox>
+        <br>
+        <mat-checkbox
+        [(ngModel)]="newUser.permission.canModifyPermissions"
+        [labelPosition]="'after'" (click)='modifyPermission(newUser)'>
+          Può modificare i permessi?
+        </mat-checkbox>
+      </td>
+      <td>
+        <!-- --------BOTTONI AGGIUNTA-------- -->
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+  <!-- ---------------FINE TABELLA--------------- -->
+</div>
+
+<ng-template #lista>
+  <!-- ---------------INIZIO LISTA--------------- -->
+  <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+  Aggiungi sezione
+  </button>
+  <mat-accordion>
+    <!-- ---------------INIZIO PANNELLO AGGIUNTA--------------- -->
+    <mat-expansion-panel [expanded]='isAdding' *ngIf='isAdding'>
+      <mat-list>
+        <mat-list-item>
+          <div class="form-group">
+            <input type="text" name="addEmail" id="addEmail" class="form-control"
+            [(ngModel)]="newUser.email" placeholder="Email utente"
+            >
+          </div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [disabled]='newUser.permission.canModifyPermissions'
+          [(ngModel)]="newUser.permission.canAddGame"
+          [labelPosition]="'after'">
+            Può aggiungere giochi?
+          </mat-checkbox>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [disabled]='newUser.permission.canModifyPermissions'
+          [(ngModel)]="newUser.permission.canDeleteGame"
+          [labelPosition]="'after'">
+            Può rimuovere giochi?
+          </mat-checkbox>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [disabled]='newUser.permission.canModifyPermissions'
+          [(ngModel)]="newUser.permission.canUpdateGame"
+          [labelPosition]="'after'">
+            Può aggiornare i giochi?
+          </mat-checkbox>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [disabled]='newUser.permission.canModifyPermissions'
+          [(ngModel)]="newUser.permission.canAddPeople"
+          [labelPosition]="'after'">
+            Può aggiungere collaboratori?
+          </mat-checkbox>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [(ngModel)]="newUser.permission.canModifyPermissions"
+          [labelPosition]="'after'" (click)='modifyPermission(newUser)'>
+            Può modificare i permessi?
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+
+      <!-- --------BOTTONI AGGIUNTA-------- -->
+      <mat-action-row>
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <!-- ---------------FINE PANNELLO AGGIUNTA--------------- -->
+
+
+    <!-- ---------------INZIO PANNELLO UTENTI--------------- -->
+    <mat-expansion-panel *ngFor='let user of users; let i = index'>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{user.name || 'Utente inesistente'}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <!-- --------LISTA NORMALE-------- -->
+        <mat-list *ngIf='editIndex != i'>
+          <mat-list-item>
+            Indirizzo email: <br>
+            {{user.email || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            Può aggiungere giochi: <br>
+            {{user.permission.canAddGame?'si':'no'}}
+          </mat-list-item>
+          <mat-list-item>
+            Può rimuovere giochi: <br>
+            {{user.permission.canDeleteGame?'si':'no'}}
+          </mat-list-item>
+          <mat-list-item>
+            Può aggiornare i giochi: <br>
+            {{user.permission.canUpdateGame?'si':'no'}}
+          </mat-list-item>
+          <mat-list-item>
+            Può modificare i permessi: <br>
+            {{user.permission.canModifyPermissions?'si':'no'}}
+          </mat-list-item>
+        </mat-list>
+
+        <!-- --------LISTA EDIT-------- -->
+        <mat-list *ngIf='editIndex == i'>
+          <mat-list-item>
+            Indirizzo email: <br>
+            {{user.email || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canAddGame"
+            [labelPosition]="'after'">
+              Può aggiungere giochi?
+            </mat-checkbox>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canDeleteGame"
+            [labelPosition]="'after'">
+              Può rimuovere giochi?
+            </mat-checkbox>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canUpdateGame"
+            [labelPosition]="'after'">
+              Può aggiornare i giochi?
+            </mat-checkbox>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-checkbox
+            [disabled]='user.permission.canModifyPermissions'
+            [(ngModel)]="user.permission.canAddPeople"
+            [labelPosition]="'after'">
+              Può aggiungere collaboratori?
+            </mat-checkbox>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-checkbox
+            [(ngModel)]="user.permission.canModifyPermissions"
+            [labelPosition]="'after'" (click)='modifyPermission(user)'>
+              Può modificare i permessi?
+            </mat-checkbox>
+          </mat-list-item>
+        </mat-list>
+
+        <!-- --------BOTTONI NORMALI-------- -->
+        <mat-action-row *ngIf='isLogged() && editIndex != i'>
+          <button mat-icon-button [color]="'warn'" (click)='removeUser(user.email, i)'>
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+          <button mat-icon-button [color]="'primary'" (click)='startEdit(i, user)'>
+            <mat-icon aria-hidden="true">edit</mat-icon>
+          </button>
+        </mat-action-row>
+
+        <!-- --------BOTTONI EDIT-------- -->
+        <mat-action-row *ngIf='isLogged() && editIndex == i'>
+          <button (click)='edit(user)' mat-icon-button [color]="'primary'">
+            <mat-icon aria-hidden="true">check</mat-icon>
+          </button>
+          <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+            <mat-icon aria-hidden="true">undo</mat-icon>
+          </button>
+        </mat-action-row>
+
+    </mat-expansion-panel>
+    <!-- ---------------FINE PANNELLO UTENTI--------------- -->
+  </mat-accordion>
+  <!-- ---------------FINE LISTA--------------- -->
+</ng-template>
+<p style="color: red;">
+{{error}}
+</p>
