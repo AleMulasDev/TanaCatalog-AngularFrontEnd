@@ -61,5 +61,14 @@
     border-radius: 5px;
     border-color: black;
     background-color: rgb(177, 177, 177);
+    min-height: 60%;
   }
+}
+
+.footer {
+  margin-top: 30px;
+  background-color: grey;
+  color: white;
+  padding: 30px;
+  text-align: center;
 }

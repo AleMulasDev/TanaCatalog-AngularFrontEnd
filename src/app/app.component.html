@@ -5,10 +5,13 @@
       <mat-icon aria-hidden="false" aria-label="Menu">view_list</mat-icon>
     </button>
     <!-- Logo -->
-    <picture style="height: inherit;">
-      <source srcset="/assets/logo.png" />
-      <img style="height: inherit; max-width: 100%" alt="{{ title }}: community dei Giochi Da Tavolo" />
-    </picture>
+    <a (click)="sidenav.close()" [routerLink]="['/']"
+    routerLinkActive="router-link-active" style="height: inherit;">
+      <picture style="height: inherit;">
+        <source srcset="/assets/logo.png" />
+        <img style="height: inherit; max-width: 100%" alt="{{ title }}: community dei Giochi Da Tavolo" />
+      </picture>
+    </a>
     <span style="flex: 1 1 auto;"></span>
     <!-- Buttons to be added here -->
   </mat-toolbar>
@@ -36,11 +39,6 @@
               routerLinkActive="router-link-active">
               <mat-icon matListIcon aria-hidden="true">view_stream</mat-icon><p matLine>Visualizza sezioni</p>
             </button>
-            <mat-divider></mat-divider>
-            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/admin']"
-              routerLinkActive="router-link-active">
-              <mat-icon matListIcon aria-hidden="true">settings</mat-icon><p matLine>Admin</p>
-            </button>
             <ng-container *ngIf='sections'>
               <ng-container *ngFor='let section of sections'>
                 <mat-divider></mat-divider>
@@ -51,6 +49,11 @@
                   </button>
               </ng-container>
             </ng-container>
+            <mat-divider></mat-divider>
+            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/admin']"
+              routerLinkActive="router-link-active">
+              <mat-icon matListIcon aria-hidden="true">settings</mat-icon><p matLine>Admin</p>
+            </button>
           </mat-action-list>
           <mat-card class="loginArea">
 
@@ -87,6 +90,65 @@
     <mat-sidenav-content role="main">
       <div class="mainTable">
         <router-outlet></router-outlet>
+      </div>
+      <div class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-4" style="border-bottom: 20px;">
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    Questo sito è stato realizzato da:
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    Alessandro Mulas
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" style="border-bottom: 20px;">
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    Per eventuali segnalazioni:
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    alemulas.lavoro@gmail.com
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4" style="border-bottom: 20px;">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col">
+                    Quest'opera è distribuita con Licenza
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: white">
+                      Creative Commons Attribuzione <br>
+                      Non commerciale <br>
+                      Condividi allo stesso modo 4.0 Internazionale
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+                      <img alt="Licenza Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

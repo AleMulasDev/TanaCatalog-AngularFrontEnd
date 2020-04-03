@@ -18,7 +18,7 @@ export class AppComponent implements OnDestroy {
   error; string;
 
   get isLogged(): boolean {
-    if (this.auth.currentTokenValue != null) {
+    if (this.auth.currentTokenValue) {
       return true;
     } else {
       return false;
