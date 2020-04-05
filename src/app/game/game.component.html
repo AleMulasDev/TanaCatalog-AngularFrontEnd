@@ -1,0 +1,428 @@
+
+
+<div class="container-fluid" class="search">
+  <form #searchForm="ngForm" (ngSubmit)="search()">
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="col-sm-6">
+      <input type="text" name="searchTitle" id="searchTitle" class="form-control"
+      placeholder="Inserisci il testo..."
+      [(ngModel)]='searchOption.value'>
+    </div>
+    <div class="col-sm-2">
+      <button type="submit" mat-raised-button>Cerca</button>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="col-sm-2">
+      Filtra per:
+    </div>
+    <div class="col-sm-5">
+      <mat-radio-group
+      [(ngModel)]="searchOption.type" name='radioGroup'>
+        <mat-radio-button value="1" checked='true'>titolo</mat-radio-button>
+        <mat-radio-button value="2">custode</mat-radio-button>
+        <mat-radio-button value="3">origine</mat-radio-button>
+        <mat-radio-button value="4">proprietà</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="col-sm-2">  
+      <mat-checkbox
+        [(ngModel)]="searchOption.isNew"
+        [labelPosition]="'before'"
+        name='isNewSearch'>
+        Cerca solo nuovi:
+      </mat-checkbox>
+    </div>
+  </div>
+</form>
+</div>
+<div class="table-responsive" *ngIf='isMediumMonitor else lista'>
+  <!-- ---------------INIZIO TABELLA--------------- -->
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Titolo</th>
+        <th>Custode</th>
+        <th>Origine</th>
+        <th>Proprietà</th>
+        <th>Data acquisizione</th>
+        <th>Nuovo</th>
+        <th>Opzioni</th>
+      </tr>
+    </thead>
+    <ng-container *ngIf='filteredSectionGames'>
+      <tr *ngFor='let sectionGame of filteredSectionGames; let i = index' [class.new]='sectionGame.isNew'>
+        <!-- --------RIGA EDITING-------- -->
+        <ng-container *ngIf='i == editIndex'>
+          <td>{{sectionGame.gameTitle || "-"}}</td>
+          <td>{{sectionGame.holderTitle}}</td>
+          <td>
+            <input type="text" name="addOrigin" id="addOrigin" class="form-control"
+            [(ngModel)]="sectionGame.origin" placeholder="Origine"
+            [matAutocomplete]="originEdit"
+            >
+            <mat-autocomplete #originEdit="matAutocomplete">
+              <mat-option *ngFor="let option of originSuggested" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </td>
+          <td>
+            <input type="text" name="addPropriety" id="addPropriety" class="form-control"
+            [(ngModel)]="sectionGame.propriety" placeholder="Proprietà"
+            [matAutocomplete]="proprietyEdit"
+            >
+            <mat-autocomplete #proprietyEdit="matAutocomplete">
+              <mat-option *ngFor="let option of proprietySuggested" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </td>
+          <td>
+            <input type="date" name="addDate" id="addDate" class="form-control"
+            [(ngModel)]="sectionGame.acquisitionDate" placeholder="Data acquisizione"
+            >
+          </td>
+          <td>
+            <mat-checkbox
+            [(ngModel)]="sectionGame.isNew">
+            </mat-checkbox>
+          </td>
+          
+          <td>
+            <button (click)='edit(sectionGame)' mat-icon-button [color]="'primary'">
+              <mat-icon aria-hidden="true">check</mat-icon>
+            </button>
+            <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+              <mat-icon aria-hidden="true">undo</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- --------RIGA VISUALIZZAZIONE-------- -->
+        <ng-container *ngIf='i != editIndex'>
+          <td>{{sectionGame.gameTitle || "-"}}</td>
+          <td>{{sectionGame.holderTitle}}</td>
+          <td>{{sectionGame.origin}}</td>
+          <td>{{sectionGame.propriety}}</td>
+          <td>{{sectionGame.acquisitionDate}}</td>
+          <td>{{sectionGame.isNew ? 'Si' : 'No'}}</td>
+
+          <td>
+            <ng-container *ngIf='permission.isOwner==true || permission.canDeleteGame || permission.canUpdateGame'>
+              <button mat-icon-button [color]="'warn'" (click)='removesectionGame(sectionGame.id, i)'
+              *ngIf='permission.canDeleteGame || permission.isOwner == true'>
+                <mat-icon aria-hidden="true">close</mat-icon>
+              </button>
+              <button mat-icon-button [color]="'primary'" (click)='startEdit(i, sectionGame)'
+              *ngIf='permission.canUpdateGame || permission.isOwner == true'>
+                <mat-icon aria-hidden="true">edit</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+    <tr *ngIf='isAdding'>
+      <!-- --------AGGIUNTA GIOCO-------- -->
+      <td>
+          <input type="text" name="addGameTitle" id="addGameTitle" class="form-control"
+          placeholder="Nome gioco"
+        matInput       
+        [matAutocomplete]="auto"
+        #gameTitle (keyup)='filterGame(gameTitle.value)'
+        >
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+        (optionSelected)='onSelectGame($event)'>
+          <ng-container *ngIf='gameList'>
+            <mat-option *ngFor="let option of filteredGameList" [value]="option">
+              {{option.title}}
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+        <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso' *ngIf='!gameList'></mat-progress-bar>
+      </td>
+      <td>
+        <input type="text" name="addGameHolder" id="addGameHolder" class="form-control"
+        placeholder="Custode del gioco"
+        matInput       
+        [matAutocomplete]="holder"
+        #gameHolderTitle (keyup)='filterHolder(gameHolderTitle.value)'
+        >
+        <mat-autocomplete #holder="matAutocomplete" [displayWith]="displayFn"
+        (optionSelected)='onSelectHolder($event)'>
+          <ng-container *ngIf='holderList'>
+            <mat-option *ngFor="let option of filteredHolderList" [value]="option">
+              {{option.title}}
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+        <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso' *ngIf='!holderList'></mat-progress-bar>
+
+      </td>
+      <td>
+        <input type="text" name="addOrigin" id="addOrigin" class="form-control"
+        [(ngModel)]="newSectionGame.origin" placeholder="Origine gioco"
+        [matAutocomplete]="origin"
+        >
+        <mat-autocomplete #origin="matAutocomplete">
+          <mat-option *ngFor="let option of originSuggested" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </td>
+      <td>
+        <input type="text" name="addPropriety" id="addPropriety" class="form-control"
+        [(ngModel)]="newSectionGame.propriety" placeholder="Proprietà gioco"
+        [matAutocomplete]="propriety"
+        >
+        <mat-autocomplete #propriety="matAutocomplete">
+          <mat-option *ngFor="let option of proprietySuggested" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </td>
+      <td>
+        <input type="date" name="addGameDate" id="addGameDate" class="form-control"
+            [(ngModel)]="newSectionGame.acquisitionDate" placeholder="Data acquisizione"
+            >
+      </td>
+      <td>
+        <mat-checkbox
+        [(ngModel)]="newSectionGame.isNew"
+        [labelPosition]="'after'">
+        Nuovo:
+        </mat-checkbox>
+      </td>
+      <td>
+        <!-- --------BOTTONI AGGIUNTA-------- -->
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </td>
+    </tr>
+    <!-- --------BOTTONE AGGIUNTA GIOCO-------- -->
+    <tr *ngIf='!isAdding && (permission.canAddGame||permission.isOwner)'>
+      <td colspan="7">
+        <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;"
+        *ngIf='permission.canAddGame || permission.isOwner == true'>
+        Aggiungi gioco
+        </button>
+      </td>
+    </tr>
+  </table>
+  <!-- ---------------FINE TABELLA--------------- -->
+</div>
+
+<ng-template #lista>
+  <!-- ---------------INIZIO LISTA--------------- -->
+  <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;" 
+  *ngIf='permission.canAddGame || permission.isOwner'>
+  Aggiungi gioco
+  </button>
+  <mat-accordion>
+    <!-- ---------------INIZIO PANNELLO AGGIUNTA--------------- -->
+    <mat-expansion-panel [expanded]='isAdding' *ngIf='isAdding'>
+      <mat-list>
+        <mat-list-item>
+          <input type="text" name="addGameTitle" id="addGameTitle" class="form-control"
+          placeholder="Nome gioco"
+          matInput       
+          [matAutocomplete]="auto"
+          #gameTitle (keyup)='filterGame(gameTitle.value)'
+          >
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+          (optionSelected)='onSelectGame($event)'>
+            <ng-container *ngIf='gameList'>
+              <mat-option *ngFor="let option of filteredGameList" [value]="option">
+                {{option.title}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+          <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso' *ngIf='!gameList'></mat-progress-bar>
+        </mat-list-item>
+        <mat-list-item>
+          <input type="text" name="addGameHolder" id="addGameHolder" class="form-control"
+          placeholder="Custode del gioco"
+          matInput       
+          [matAutocomplete]="holder"
+          #gameHolderTitle (keyup)='filterHolder(gameHolderTitle.value)'
+          >
+          <mat-autocomplete #holder="matAutocomplete" [displayWith]="displayFn"
+          (optionSelected)='onSelectHolder($event)'>
+            <ng-container *ngIf='holderList'>
+              <mat-option *ngFor="let option of filteredHolderList" [value]="option">
+                {{option.title}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+          <mat-progress-bar mode="indeterminate" aria-label='Ricerca in corso' *ngIf='!holderList'></mat-progress-bar>
+
+        </mat-list-item>
+        <mat-list-item>
+          <input type="text" name="addOrigin" id="addOrigin" class="form-control"
+          [(ngModel)]="newSectionGame.origin" placeholder="Origine gioco"
+          [matAutocomplete]="origin"
+          >
+          <mat-autocomplete #origin="matAutocomplete">
+            <mat-option *ngFor="let option of originSuggested" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-list-item>
+        <mat-list-item>
+          <input type="text" name="addPropriety" id="addPropriety" class="form-control"
+          [(ngModel)]="newSectionGame.propriety" placeholder="Proprietà gioco"
+          [matAutocomplete]="propriety"
+          >
+          <mat-autocomplete #propriety="matAutocomplete">
+            <mat-option *ngFor="let option of proprietySuggested" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-list-item>
+        <mat-list-item>
+          <input type="date" name="addGameDate" id="addGameDate" class="form-control"
+              [(ngModel)]="newSectionGame.acquisitionDate" placeholder="Data acquisizione"
+              >
+        </mat-list-item>
+        <mat-list-item>
+          <mat-checkbox
+          [(ngModel)]="newSectionGame.isNew"
+          [labelPosition]="'after'">
+          Nuovo:
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+
+      <!-- --------BOTTONI AGGIUNTA-------- -->
+      <mat-action-row>
+        <button (click)='add()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">check</mat-icon>
+        </button>
+        <button (click)='stopAdding()' mat-icon-button [color]="'primary'">
+          <mat-icon aria-hidden="true">undo</mat-icon>
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <!-- ---------------FINE PANNELLO AGGIUNTA--------------- -->
+
+
+    <!-- ---------------INZIO PANNELLO UTENTI--------------- -->
+    <mat-expansion-panel *ngFor='let sectionGame of filteredSectionGames; let i = index' [class.new]='sectionGame.isNew'>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{sectionGame.gameTitle || 'Gioco inesistente'}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <!-- --------LISTA NORMALE-------- -->
+        <mat-list *ngIf='editIndex != i'>
+          <mat-list-item>
+            Titolo: <br>
+            {{sectionGame.gameTitle || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            Custode:  <br>
+            {{sectionGame.holderTitle}}
+          </mat-list-item>
+          <mat-list-item>
+            Origine:  <br>
+            {{sectionGame.origin}}
+          </mat-list-item>
+          <mat-list-item>
+            Proprietà:  <br>
+            {{sectionGame.propriety}}
+          </mat-list-item>
+          <mat-list-item>
+            Data acquisizione:  <br>
+            {{sectionGame.acquisitionDate}}
+          </mat-list-item>
+          <mat-list-item>
+            Nuovo:  <br>
+            {{sectionGame.isNew ? 'Si' : 'No'}}
+          </mat-list-item>
+        </mat-list>
+
+        <!-- --------LISTA EDIT-------- -->
+        <mat-list *ngIf='editIndex == i'>
+          <mat-list-item>
+            Titolo: <br>
+            {{sectionGame.gameTitle || 'Non inserito'}}
+          </mat-list-item>
+          <mat-list-item>
+            Custode:  <br>
+            {{sectionGame.holderTitle}}
+          </mat-list-item>
+          <mat-list-item>
+            Origine:  <br>
+            <input type="text" name="addOrigin" id="addOrigin" class="form-control"
+            [(ngModel)]="sectionGame.origin" placeholder="Origine"
+            [matAutocomplete]="originEdit"
+            >
+            <mat-autocomplete #originEdit="matAutocomplete">
+              <mat-option *ngFor="let option of originSuggested" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-list-item>
+          <mat-list-item>
+            Proprietà:  <br>
+            <input type="text" name="addPropriety" id="addPropriety" class="form-control"
+            [(ngModel)]="sectionGame.propriety" placeholder="Proprietà"
+            [matAutocomplete]="proprietyEdit"
+            >
+            <mat-autocomplete #proprietyEdit="matAutocomplete">
+              <mat-option *ngFor="let option of proprietySuggested" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-list-item>
+          <mat-list-item>
+            Data acquisizione:  <br>
+            <input type="date" name="addDate" id="addDate" class="form-control"
+            [(ngModel)]="sectionGame.acquisitionDate" placeholder="Data acquisizione"
+            >
+          </mat-list-item>
+          <mat-list-item>
+            Nuovo:  <br>
+            <mat-checkbox
+            [(ngModel)]="sectionGame.isNew">
+            </mat-checkbox>
+          </mat-list-item>
+        </mat-list>
+
+        <!-- --------BOTTONI NORMALI-------- -->
+        <mat-action-row *ngIf='isLogged() && editIndex != i && (permission.isOwner==true || permission.canDeleteGame || permission.canUpdateGame)'>
+          <button mat-icon-button [color]="'warn'" (click)='removesectionGame(sectionGame.id, i)'
+          *ngIf='permission.canDeleteGame || permission.isOwner == true'>
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+          <button mat-icon-button [color]="'primary'" (click)='startEdit(i, sectionGame)'
+          *ngIf='permission.canUpdateGame || permission.isOwner == true'>
+            <mat-icon aria-hidden="true">edit</mat-icon>
+          </button>
+        </mat-action-row>
+
+        <!-- --------BOTTONI EDIT-------- -->
+        <mat-action-row *ngIf='isLogged() && editIndex == i'>
+          <button (click)='edit(sectionGame)' mat-icon-button [color]="'primary'">
+            <mat-icon aria-hidden="true">check</mat-icon>
+          </button>
+          <button (click)='undoEdit()' mat-icon-button [color]="'accent'">
+            <mat-icon aria-hidden="true">undo</mat-icon>
+          </button>
+        </mat-action-row>
+
+    </mat-expansion-panel>
+    <!-- ---------------FINE PANNELLO GIOCHI--------------- -->
+  </mat-accordion>
+  <!-- ---------------FINE LISTA--------------- -->
+</ng-template>
+<p style="color: red;">
+{{error}}
+</p>

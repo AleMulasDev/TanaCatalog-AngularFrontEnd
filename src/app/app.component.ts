@@ -30,13 +30,7 @@ export class AppComponent implements OnDestroy {
   }
 
   constructor(private s: SectionService, breakpointObserver: BreakpointObserver, private auth: AuthenticationService,
-              private _snackBar: MatSnackBar) {
-    s.retrieveSectionList()
-    .then(value => {
-      this.sections = value instanceof Array ? value : undefined;
-    }).catch(err => {
-      this.error = err;
-    });
+              private snackBar: MatSnackBar) {
     breakpointObserver.observe([
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait
@@ -47,10 +41,24 @@ export class AppComponent implements OnDestroy {
         this.isMediumMonitor = true;
       }
     });
-    this._snackBar.open('\
+    this.snackBar.open('\
 Questo sito utilizza cookie e/o local storage tecnici propri per le sue funzionalità \
 Chiudendo questo banner, scorrendo questa pagina o cliccando qualunque suo elemento acconsenti all\'uso dei cookie e/o local storage.\
     ', 'Chiudi');
+
+    this.auth.getBehaviourSubject()
+    .subscribe(val => {
+      if (val !== undefined && val != null && val !== '') {
+        s.retrieveSectionList()
+        .then(value => {
+          this.sections = value instanceof Array ? value : undefined;
+        }).catch(err => {
+          this.error = err;
+        });
+      } else {
+        this.sections = undefined;
+      }
+    });
   }
 
   ngOnDestroy(): void {

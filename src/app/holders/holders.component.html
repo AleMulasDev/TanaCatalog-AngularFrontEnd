@@ -71,7 +71,7 @@
     <tr *ngIf='!isAdding'>
       <td colspan="6">
         <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
-        Aggiungi sezione
+        Aggiungi custode
         </button>
       </td>
     </tr>
@@ -118,7 +118,7 @@
 
 <ng-template #lista>
   <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
-  Aggiungi sezione
+  Aggiungi custode
   </button>
   <mat-accordion>
     <mat-expansion-panel [expanded]='isAdding' *ngIf='isAdding'>

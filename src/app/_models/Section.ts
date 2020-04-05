@@ -35,14 +35,14 @@ export class SectionUser {
 export class UserPermission {
   constructor(obj?) {
     if (obj) {
-      const {can_add_game, can_delete_game,
-        can_update_game, can_add_people, can_modify_permissions, is_owner} = obj;
-      this.canAddGame = (can_add_game ? true : false);
-      this.canDeleteGame = (can_delete_game ? true : false);
-      this.canUpdateGame = (can_update_game ? true : false);
-      this.canAddPeople = (can_add_people ? true : false);
-      this.canModifyPermissions = (can_modify_permissions ? true : false);
-      this.isOwner = (is_owner ? true : false);
+      const {canAddGame, canDeleteGame,
+        canUpdateGame, canAddPeople, canModifyPermissions, isOwner} = obj;
+      this.canAddGame = (canAddGame ? true : false);
+      this.canDeleteGame = (canDeleteGame ? true : false);
+      this.canUpdateGame = (canUpdateGame ? true : false);
+      this.canAddPeople = (canAddPeople ? true : false);
+      this.canModifyPermissions = (canModifyPermissions ? true : false);
+      this.isOwner = (isOwner ? true : false);
     } else {
       this.canAddGame = false;
       this.canDeleteGame = false;
@@ -63,17 +63,17 @@ export class UserPermission {
 export class AddUserPermission {
   constructor({canAddGame, canDeleteGame, canUpdateGame, canAddPeople, canModifyPermissions,
     isOwner}) {
-  this.can_add_game = canAddGame ? 1 : 0;
-  this.can_delete_game = canDeleteGame ? 1 : 0;
-  this.can_update_game = canUpdateGame ? 1 : 0;
-  this.can_add_people = canAddPeople ? 1 : 0;
-  this.can_modify_permissions = canModifyPermissions ? 1 : 0;
-  this.is_owner = isOwner ? 1 : 0;
+  this.canAddGame = canAddGame ? 1 : 0;
+  this.canDeleteGame = canDeleteGame ? 1 : 0;
+  this.canUpdateGame = canUpdateGame ? 1 : 0;
+  this.canAddPeople = canAddPeople ? 1 : 0;
+  this.canModifyPermissions = canModifyPermissions ? 1 : 0;
+  this.isOwner = isOwner ? 1 : 0;
   }
-  can_add_game;
-  can_delete_game;
-  can_update_game;
-  can_add_people;
-  can_modify_permissions;
-  is_owner;
+  canAddGame;
+  canDeleteGame;
+  canUpdateGame;
+  canAddPeople;
+  canModifyPermissions;
+  isOwner;
 }

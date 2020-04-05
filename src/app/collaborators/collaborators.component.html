@@ -12,7 +12,6 @@
     </thead>
     <ng-container *ngIf='users'>
       <tr *ngFor='let user of users; let i = index'>
-
         <!-- --------RIGA EDITING-------- -->
         <ng-container *ngIf='i == editIndex'>
           <td>{{user.email || "-"}}</td>
@@ -66,7 +65,10 @@
         <!-- --------RIGA VISUALIZZAZIONE-------- -->
         <ng-container *ngIf='i != editIndex'>
           <td>{{user.email || "-"}}</td>
-          <td>{{user.name || "-"}}</td>
+          <td>
+            <ng-container *ngIf='user.permission.isOwner==true'>(CREATORE)</ng-container>
+            {{user.name || "-"}}
+          </td>
           <td>
             <mat-list>
               <mat-list-item>
@@ -82,29 +84,28 @@
                 {{user.permission.canUpdateGame?'si':'no'}}
               </mat-list-item>
               <mat-list-item>
+                Può aggiungere collaboratori: <br>
+                {{user.permission.canAddPeople?'si':'no'}}
+              </mat-list-item>
+              <mat-list-item>
                 Può modificare i permessi: <br>
                 {{user.permission.canModifyPermissions?'si':'no'}}
               </mat-list-item>
             </mat-list>
           </td>
           <td>
-            <button mat-icon-button [color]="'warn'" (click)='removeUser(user.email, i)'>
-              <mat-icon aria-hidden="true">close</mat-icon>
-            </button>
-            <button mat-icon-button [color]="'primary'" (click)='startEdit(i, user)'>
-              <mat-icon aria-hidden="true">edit</mat-icon>
-            </button>
+            <ng-container *ngIf='user.permission.isOwner!=true && permission.canModifyPermissions==true'>
+              <button mat-icon-button [color]="'warn'" (click)='removeUser(user.email, i)'>
+                <mat-icon aria-hidden="true">close</mat-icon>
+              </button>
+              <button mat-icon-button [color]="'primary'" (click)='startEdit(i, user)'>
+                <mat-icon aria-hidden="true">edit</mat-icon>
+              </button>
+            </ng-container>
           </td>
         </ng-container>
       </tr>
     </ng-container>
-    <tr *ngIf='!isAdding'>
-      <td colspan="6">
-        <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
-        Aggiungi utente
-        </button>
-      </td>
-    </tr>
     <tr *ngIf='isAdding'>
       <!-- --------AGGIUNTA UTENTE-------- -->
       <td colspan="2">
@@ -157,13 +158,23 @@
         </button>
       </td>
     </tr>
+    <!-- --------BOTTONE AGGIUNTA UTENTE-------- -->
+    <tr *ngIf='!isAdding && (permission.canAddPeople||permission.isOwner)'>
+      <td colspan="6">
+        <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;"
+        *ngIf='permission.canAddPeople||permission.isOwner'>
+        Aggiungi utente
+        </button>
+      </td>
+    </tr>
   </table>
   <!-- ---------------FINE TABELLA--------------- -->
 </div>
 
 <ng-template #lista>
   <!-- ---------------INIZIO LISTA--------------- -->
-  <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;">
+  <button (click)='startAdd()' mat-raised-button style="margin-bottom: 10px; margin-top: 10px;"
+  *ngIf='permission.canAddPeople||permission.isOwner'>
   Aggiungi sezione
   </button>
   <mat-accordion>
@@ -236,6 +247,7 @@
 
         <mat-expansion-panel-header>
           <mat-panel-title>
+            <ng-container *ngIf='user.permission.isOwner==true'>(CREATORE)</ng-container>
             {{user.name || 'Utente inesistente'}}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -257,6 +269,10 @@
           <mat-list-item>
             Può aggiornare i giochi: <br>
             {{user.permission.canUpdateGame?'si':'no'}}
+          </mat-list-item>
+          <mat-list-item>
+            Può aggiungere collaboratori: <br>
+            {{user.permission.canAddPeople?'si':'no'}}
           </mat-list-item>
           <mat-list-item>
             Può modificare i permessi: <br>
@@ -312,7 +328,7 @@
         </mat-list>
 
         <!-- --------BOTTONI NORMALI-------- -->
-        <mat-action-row *ngIf='isLogged() && editIndex != i'>
+        <mat-action-row *ngIf='isLogged() && editIndex != i && user.permission.isOwner!=true && permission.canModifyPermissions==true'>
           <button mat-icon-button [color]="'warn'" (click)='removeUser(user.email, i)'>
             <mat-icon aria-hidden="true">close</mat-icon>
           </button>

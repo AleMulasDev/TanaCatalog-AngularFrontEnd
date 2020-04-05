@@ -17,6 +17,10 @@ export class AuthenticationService {
     });
   }
 
+  public getBehaviourSubject(): BehaviorSubject<string> {
+    return this.currentUserToken;
+  }
+
   public get currentTokenValue(): string {
     return this.currentUserToken.value;
   }
@@ -24,8 +28,9 @@ export class AuthenticationService {
   async confirmToken() {
     return new Promise((resolve, reject) => {
     const token = this.currentTokenValue;
-    if (!token) {
+    if (token == null || token === undefined || token === '') {
       reject('Unlogged user');
+      return;
     }
     const params = `?token=${encodeURIComponent(token)}`;
     this.http.get<any>(constant.server.TOKEN_CHECK_PATH + params
@@ -184,6 +189,7 @@ export class AuthenticationService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUserToken');
-    this.currentUserToken.next(null);
+    sessionStorage.removeItem('currentUserToken');
+    this.currentUserToken.next('');
   }
 }

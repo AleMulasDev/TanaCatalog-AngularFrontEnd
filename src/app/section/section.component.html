@@ -17,7 +17,7 @@
       <app-holders [permission]='userPermission' [section]='section' [(isMediumMonitor)]='isMediumMonitor'></app-holders>
       
     </mat-tab>
-    <mat-tab label="Collaboratori" *ngIf='section.isOwner==1'>
+    <mat-tab label="Collaboratori" *ngIf='userPermission.canModifyPermissions || userPermission.canAddPeople || userPermission.isOwner'>
 
       <app-collaborators [permission]='userPermission' [section]='section' [(isMediumMonitor)]='isMediumMonitor'></app-collaborators>
 

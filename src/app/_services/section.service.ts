@@ -101,10 +101,10 @@ export class SectionService {
               reject('Errore nell\'elaborazione degli utenti nella sezione ' + err);
             }
           } else {
-            reject(response.error || 'Impossibile ottenere la lista degli utenti nella sezione');
+            reject('Impossibile ottenere la lista degli utenti nella sezione');
           }
         } else {
-          reject('Impossibile ottenere una risposta dal server: ' + response.error || '');
+          reject(response.error || 'Impossibile ottenere una risposta dal server: ');
         }
       }, err => {
         reject('Si è verificato un errore di connessione ' + err);
