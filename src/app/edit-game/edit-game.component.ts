@@ -16,7 +16,6 @@ export class EditGameComponent implements OnInit {
   game: Game;
 
   onSubmit() {
-    console.log(this.game.canUpdateGame);
     this.g.addGame(this.game)
     .then(val => {
       const snakRef = this.snackBar.open(val, 'Chiudi', {duration: 3000});
@@ -24,7 +23,7 @@ export class EditGameComponent implements OnInit {
         this.router.navigate(['visualizeGames']);
       });
     }).catch(err => {
-      this.snackBar.open(err, 'Chiudi', {duration: 3000});
+      this.snackBar.open(err.error || err , 'Chiudi', {duration: 3000});
     });
   }
 
@@ -46,7 +45,7 @@ export class EditGameComponent implements OnInit {
               }
             }
           }).catch(err => {
-            this.error = err;
+            this.error = err.error || err;
           });
         } else {
           this.error = 'Errore, non è stato ricevuto il gioco da modificare';

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { VisualizeGamesComponent } from './visualize-games/visualize-games.component';
-import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { RecoverComponent } from './recover/recover.component';
@@ -20,7 +19,6 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'visualizeGames', component: VisualizeGamesComponent, canActivate: [AuthGuard] },
   { path: 'visualizeSections', component: VisualizeSectionsComponent, canActivate: [AuthGuard] },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'recover', component: RecoverComponent},

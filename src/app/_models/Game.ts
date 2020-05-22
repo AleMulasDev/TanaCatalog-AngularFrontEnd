@@ -39,6 +39,9 @@ export class Game {
   thumbnail;
   price;
   canUpdateGame: string;
+  isOwner;
+  canEdit;
+  owner;
 }
 
 export class GamePermission {

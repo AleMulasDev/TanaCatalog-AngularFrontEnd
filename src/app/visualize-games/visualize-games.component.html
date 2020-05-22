@@ -75,9 +75,6 @@
                 <img [src]='getImage(game)' style="height: 50px;" *ngIf='game.thumbnail'>
                 {{game.title || '-'}}
               </mat-panel-title>
-              <mat-panel-description>
-                {{game.description ? game.description.slice(0,20) + '...' : ''}}
-              </mat-panel-description>
             </mat-expansion-panel-header>
 
             Descrizione: <br>

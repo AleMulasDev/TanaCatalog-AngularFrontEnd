@@ -30,7 +30,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { VisualizeGamesComponent } from './visualize-games/visualize-games.component';
-import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PasswordValidatorDirective } from './password-validator.directive';
@@ -51,7 +50,6 @@ import { CollaboratorsComponent } from './collaborators/collaborators.component'
   declarations: [
     AppComponent,
     VisualizeGamesComponent,
-    AdminComponent,
     LoginComponent,
     RegisterComponent,
     PasswordValidatorDirective,

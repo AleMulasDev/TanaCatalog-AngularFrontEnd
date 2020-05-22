@@ -113,6 +113,9 @@ export class GameComponent implements OnInit {
   }
 
   search() {
+    if (!this.searchOption.value) {
+      this.searchOption.value = '';
+    }
     const arr: SectionGames[] = new Array();
     if (!this.searchOption.type) {
       this.searchOption.type = 1; // default

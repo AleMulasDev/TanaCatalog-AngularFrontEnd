@@ -102,7 +102,7 @@ export class AuthenticationService {
           }
         }
       }, err => {
-        reject('Si è verificato un errore di connessione');
+        reject('Si è verificato un errore di connessione: ' + err.error || err || '');
       });
     });
   }

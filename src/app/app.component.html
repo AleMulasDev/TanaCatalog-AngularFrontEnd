@@ -8,7 +8,7 @@
     <a (click)="sidenav.close()" [routerLink]="['/']"
     routerLinkActive="router-link-active" style="height: inherit;">
       <picture style="height: inherit;">
-        <source srcset="/assets/logo.png" />
+        <source srcset="/assets/tana.png" />
         <img style="height: inherit; max-width: 100%" alt="{{ title }}: community dei Giochi Da Tavolo" />
       </picture>
     </a>
@@ -49,11 +49,6 @@
                   </button>
               </ng-container>
             </ng-container>
-            <mat-divider></mat-divider>
-            <button class="navButton" (click)="sidenav.close()" mat-list-item [routerLink]="['/admin']"
-              routerLinkActive="router-link-active">
-              <mat-icon matListIcon aria-hidden="true">settings</mat-icon><p matLine>Admin</p>
-            </button>
           </mat-action-list>
           <mat-card class="loginArea">
 

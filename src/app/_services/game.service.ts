@@ -147,8 +147,7 @@ export class GameService {
       if (response.status && response.status === 'ok') {
         resolve('Operazione eseguita con successo');
       } else {
-        reject('Impossibile ottenere una risposta dal server');
-        console.error(response);
+        reject(response.error || 'Impossibile ottenere una risposta dal server');
       }
     }, err => {
       reject('Si è verificato un errore di connessione: ' + err);

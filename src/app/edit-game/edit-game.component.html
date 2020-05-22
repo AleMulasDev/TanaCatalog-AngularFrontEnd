@@ -66,7 +66,7 @@
         
         </div>
         <div class="row">
-          <div class="col">
+          <div class="col" *ngIf='game.isOwner == true'>
             <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="canUpdateGame" name="canUpdateGame"
               [(ngModel)]="game.canUpdateGame">

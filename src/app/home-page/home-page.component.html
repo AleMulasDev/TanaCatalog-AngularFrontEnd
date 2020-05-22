@@ -1,1 +1,52 @@
-<p>home-page works!</p>
+<div class="container-fluid" style="margin: 20px;">
+  <div class="row" style="text-align: center;">
+    <div class="col">
+      <h2>Benvenuti nel catalogo della Tana dei Goblin</h2>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="row" style="text-align: center;">
+    <div class="col">
+      <h3>Come funziona?</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h4>Giochi</h4><br>
+      I giochi sono inseriti nel database locale attraverso questa pagina: 
+      <a [routerLink]="['/addGame']"
+      routerLinkActive="router-link-active">(Aggiunta giochi)</a><br>
+      E sono visualizzati nella seguente: 
+      <a [routerLink]="['/visualizeGames']"
+      routerLinkActive="router-link-active">(Visualizza giochi)</a><br><br>
+      I giochi sono condivisi tra tutti gli utilizzatori del catalogo,
+      di conseguenza è possibile bloccare la loro modifica da parte di altri utenti.
+      Tuttavia, se si vuole procedere per questa strada, si consiglia di inserire
+      i dati quanto più corretti, per evitare giochi duplicati ma con dati leggermente
+      differenti.
+      <br><br><br>
+      <h4>Sezioni</h4><br>
+      Le zone di lavoro sono le sezioni: 
+      <a [routerLink]="['/visualizeSections']"
+      routerLinkActive="router-link-active">(Visualizza sezioni)</a><br>
+      Esse astraggono diversi luoghi geografici o diverse associazioni. <br>
+      Infatti esse hanno una gestione delle seguenti funzionalità:
+      <ul>
+        <li>
+          Lista di giochi (con parametri specifici di sezione e un collegamento
+          al gioco globale scelto)
+        </li>
+        <li>
+          Lista di custodi (con dati relativi all'indirizzo e la città)
+        </li>
+        <li>
+          Lista di collaboratori. Questi ultimi possono visualizzare i giochi e i 
+          custodi con i loro dettagli, ma le loro abilità di modifica all'interno 
+          della sezione sono gestite attraverso un sistema di permessi.
+        </li>
+      </ul>
+      Chiunque può creare la propria sezione per la gestione della propria zona/associazione.
+      <br><br>
+    </div>
+  </div>
+</div>
