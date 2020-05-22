@@ -4,13 +4,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { constant } from '../_utils/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private currentUserToken: BehaviorSubject<string>;
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router) {
-    this.currentUserToken = new BehaviorSubject<string>(localStorage.getItem('currentUserToken'));
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router,
+              private cookieService: CookieService) {
+    // this.currentUserToken = new BehaviorSubject<string>(localStorage.getItem('currentUserToken'));
+    this.currentUserToken = new BehaviorSubject<string>(cookieService.get('currentUserToken'));
     this.confirmToken()
     .then(val => {
     }).catch(err => {
@@ -38,8 +41,9 @@ export class AuthenticationService {
       if (response.status && response.status === 'ok') {
         resolve(true);
       } else {
-        localStorage.setItem('currentUserToken', '');
-        sessionStorage.setItem('currentUserToken', '');
+        this.cookieService.set('currentUserToken', '');
+        // localStorage.setItem('currentUserToken', '');
+        // sessionStorage.setItem('currentUserToken', '');
         if (this.currentTokenValue != '') {
           this.currentUserToken.next('');
           this.router.navigate(['/login']);
@@ -88,9 +92,12 @@ export class AuthenticationService {
       }, httpOptions).subscribe(response => {
         if (response.token && response.token != null) {
           if (keepLogged) {
-            localStorage.setItem('currentUserToken', response.token);
+            // localStorage.setItem('currentUserToken', response.token);
+            let tomorrow = new Date(Date.now() + 86400000);
+            this.cookieService.set('currentUserToken', response.token, tomorrow);
           } else {
-            sessionStorage.setItem('currentUserToken', response.token);
+            // sessionStorage.setItem('currentUserToken', response.token);
+            this.cookieService.set('currentUserToken', response.token);
           }
           this.currentUserToken.next(response.token);
           resolve(response.token);
@@ -188,8 +195,9 @@ export class AuthenticationService {
 
   logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('currentUserToken');
-    sessionStorage.removeItem('currentUserToken');
+    // localStorage.removeItem('currentUserToken');
+    // sessionStorage.removeItem('currentUserToken');
+    this.cookieService.delete('currentUserToken');
     this.currentUserToken.next('');
   }
 }

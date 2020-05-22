@@ -2,11 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { Ng2CompleterModule } from "ng2-completer";
+import { Ng2CompleterModule } from 'ng2-completer';
 
 import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { CookieService } from 'ngx-cookie-service';
 
 // angular material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -94,7 +96,7 @@ import { CollaboratorsComponent } from './collaborators/collaborators.component'
     MatCheckboxModule,
     MatRadioModule,
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
