@@ -17,7 +17,7 @@ export class GameService {
   //          GAME LIST
   //
   retrieveGameList(): Promise<Game[] | string> {
-    let token = this.auth.currentTokenValue;
+    const token = this.auth.currentTokenValue;
     let params;
     if (token) {
       params = `?token=${encodeURIComponent(token)}`;
@@ -25,7 +25,7 @@ export class GameService {
       params = '';
     }
     return new Promise((resolve, reject) => {
-      this.http.get<any>(constant.server.BASE_PATH_GAMES+params)
+      this.http.get<any>(constant.server.BASE_PATH_GAMES + params)
       .subscribe(response => {
         if (response.status && response.status === 'ok') {
           if (response.games) {
@@ -52,7 +52,7 @@ export class GameService {
   //          SEARCH
   //
   searchbggGame(name: string): Promise<BggGameSearch[] | string> {
-    let params = `?search=${encodeURIComponent(name)}`;
+    const params = `?search=${encodeURIComponent(name)}`;
     return new Promise((resolve, reject) => {
       this.http.get<any>(constant.server.SEARCHBGG_GAME_PATH + params)
       .subscribe(response => {
@@ -61,8 +61,8 @@ export class GameService {
             let games: BggGameSearch[];
             games = new Array();
             try {
-              for (let boardgame of response.result) {
-                let game = new BggGameSearch();
+              for (const boardgame of response.result) {
+                const game = new BggGameSearch();
                 if (boardgame.name) {
                   game.name = boardgame.name[0]._ ? boardgame.name[0]._ : boardgame.name;
                 }
@@ -103,7 +103,7 @@ export class GameService {
             let games: BggGameData[];
             games = new Array();
             try {
-              for (let boardgame of response.result) {
+              for (const boardgame of response.result) {
                 const game = new BggGameData(boardgame);
                 games.push(game);
               }
@@ -162,13 +162,13 @@ export class GameService {
     return new Promise((resolve, reject) => {
     const formdata: FormData = new FormData();
     formdata.set('id', id);
-    let token = this.auth.currentTokenValue;
+    const token = this.auth.currentTokenValue;
     if (!token) {
       reject('Unlogged user');
     }
     const params = `?token=${encodeURIComponent(token)}&id=${encodeURIComponent(id)}`;
     formdata.set('token', token);
-    this.http.delete<any>(constant.server.BASE_PATH_GAMES+params)
+    this.http.delete<any>(constant.server.BASE_PATH_GAMES + params)
     .subscribe(response => {
       if (response.status && response.status === 'ok') {
         resolve('Gioco rimosso con successo');

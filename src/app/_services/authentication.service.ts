@@ -93,7 +93,7 @@ export class AuthenticationService {
         if (response.token && response.token != null) {
           if (keepLogged) {
             // localStorage.setItem('currentUserToken', response.token);
-            let tomorrow = new Date(Date.now() + 86400000);
+            const tomorrow = new Date(Date.now() + 86400000);
             this.cookieService.set('currentUserToken', response.token, tomorrow);
           } else {
             // sessionStorage.setItem('currentUserToken', response.token);
