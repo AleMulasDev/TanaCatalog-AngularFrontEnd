@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Game } from '../_models/Game';
 import { GameService } from '../_services/game.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { constant } from '../_utils/constants';
 
 @Component({
   selector: 'app-edit-game',
@@ -27,6 +28,9 @@ export class EditGameComponent implements OnInit {
     });
   }
 
+  getImage(game: Game): string {
+    return game.image.indexOf('/') === 0 ? constant.server.BASE_PATH + game.image : game.image;
+  }
 
   constructor(
     private snackBar: MatSnackBar,
